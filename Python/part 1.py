@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 
 #hey there if repo thing is working
+#now github to pycharm
 # ----------------------------------------------------------------------
                         # DataFrame
 #how to create a data frame
