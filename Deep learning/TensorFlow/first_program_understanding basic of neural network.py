@@ -32,8 +32,8 @@ class NeuralNetwork:
         #final layer processing
         final_input = np.dot(self.who, hidden_output)
         final_output = self.activation_function(final_input)
-
-        # print "final output array", final_output
+            
+        print ("final output array", final_output)
         output_error1=(target_array-final_output)*(target_array-final_output)
         math.sqrt(output_error1)
         output_error=output_error1
@@ -60,7 +60,7 @@ class NeuralNetwork:
         pass
 
 input_nodes=2
-hidden_node=2
+hidden_node=3
 output_node=1
 learning_rate=0.003
 epoch=3
@@ -105,10 +105,13 @@ for looper in range(epoch):
         count=count+1
         y=(x*myneural.wih[0,0])/myneural.wih[0,1]
         y1=(x*myneural.wih[1,0])/myneural.wih[1,1]
+        y2=(x*myneural.wih[2,0])/myneural.wih[2,1]
+        y1=(x*myneural.wih[1,0])/myneural.wih[1,1]
         print (x,y)
         plt.scatter(feature[:,0],feature[:,1],c=labels)
         plt.plot(x,y)
         plt.plot(x,y1)
+        plt.plot(x,y2)
         plt.show()
 
 

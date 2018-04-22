@@ -57,7 +57,7 @@ class NeuralNetwork:
 input_nodes=784
 hidden_node=200
 output_node=10
-learning_rate=0.3
+learning_rate=0.003
 epoch=5
 
 myneural=NeuralNetwork(inputnodes=input_nodes,hiddenodes=hidden_node,outputnodes=output_node,learningrate=learning_rate)
