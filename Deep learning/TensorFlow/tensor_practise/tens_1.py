@@ -45,13 +45,28 @@ with g.as_default():
 # '______________________________________________________________________________________
 #martrix multiply
 
-mat1=tf.constant([7,8,9,12,34,21],dtype=tf.float32,shape=[2,3])
-mat2=tf.constant([1,2,3,4,5,6],dtype=tf.float32,shape=[3,2])#shape matter a lot for matrix multiplication
+'''mat1=tf.constant([7,8,9,12,34,21],dtype=tf.float32,shape=[2,3])
 
+mat2=tf.constant([1,2,3,4,5,6],dtype=tf.float32,shape=[3,2])#shape matter a lot for matrix multiplication
+mat3=tf.linspace(start=1.0,stop=10,num=6)#to create you own list of constant
 mul=tf.matmul(mat1,mat2)
+new_dat=tf.range(10)#print range of value just like in python
+shuffle=tf.random_shuffle(new_dat)
 sess=tf.Session()
 print(sess.run(mul))
+print (sess.run(mat3))
+print(sess.run(new_dat))
+print(sess.run(shuffle))'''
 
+# '______________________________________________________________________________________
+#further function on martrix
+identy=tf.eye(3)#create idendity matrix
 
+b = tf.Variable(tf.random_uniform([5,10], 0, 2, dtype= tf.int32))#create a random matrix of 1s and 0s, size 5x10
+init=tf.global_variables_initializer()
+sess=tf.Session()
+sess.run(init)
+print(sess.run(identy))
+print(sess.run(b))
 
 
