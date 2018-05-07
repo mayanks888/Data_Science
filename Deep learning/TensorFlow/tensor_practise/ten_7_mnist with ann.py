@@ -16,9 +16,8 @@ output_matrix=tf.placeholder(dtype=tf.float32,shape=[None,total_neuron])
 
 #creating variable
 w=tf.Variable(tf.random_normal(shape=[total_pixel_input,total_neuron]))#(728*10)
-b=tf.Variable(tf.ones[10])
-
-matrix_multiply=tf.matmul(input_matrix,w)#output should be a matrix of (10 colum and batch side rows)
+b=tf.Variable(tf.ones([10]))
+matrix_multiply=tf.matmul(input_matrix,w)+b #output should be a matrix of (10 colum and batch side rows)
 
 #apply softmax  as aactivation function for all ten neuron
 #remember here only one softmax is applied to ouput of all 10 neuron
@@ -33,3 +32,12 @@ optimiser=tf.train.GradientDescentOptimizer(learning_rate=.003).minimize(loss)
 
 init=tf.global_variables_initializer()
 
+
+sess=tf.Session()
+sess.run(init)
+training_steps=100
+
+for i in range(training_steps):
+    batch_x,batch_y=mnist.train.next_batch(100)
+    # my_comp_data=sess.run([y,train_data,],feed_dict={input_matrix:batch_x,output_matrix:batch_y})
+    mycross_entropy=sess.run([loss],feed_dict={input_matrix:batch_x,output_matrix:batch_y})
