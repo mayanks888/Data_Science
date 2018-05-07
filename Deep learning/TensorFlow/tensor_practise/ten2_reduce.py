@@ -5,7 +5,7 @@ y = [1., 2., 3.]
 z = [0., 1., 3.]
 # __________________________________________-
 # reduce_all or any
-'''result1 = tf.equal(x, y)
+result1 = tf.equal(x, y)
 result2 = tf.equal(y, z)
 
 # Use reduce_all and reduce_any to test the results of equal.
@@ -58,7 +58,7 @@ sess=tf.Session()
 print(sess.run(segdata))
 print(sess.run(tf.argmax(segdata,axis=1)))#this will give us output of indix of maximum value in horizontal axis
 print(sess.run(tf.argmax(segdata,axis=0)))#max indiex in vertival or column wise
-print(sess.run(tf.where(seg2)))'''
+print(sess.run(tf.where(seg2)))
 # __________________________________________-
 #reading shape and size , and reshaping tensor
 
