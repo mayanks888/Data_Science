@@ -43,7 +43,7 @@ init=tf.global_variables_initializer()
 
 sess=tf.Session()
 sess.run(init)
-training_steps=100
+training_steps=2
 
 for i in range(training_steps):
     batch_x,batch_y=mnist.train.next_batch(100)
