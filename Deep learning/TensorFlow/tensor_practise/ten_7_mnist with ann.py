@@ -11,8 +11,8 @@ total_pixel_input=728#28X28 matrix
 total_neuron=10#this does not have hidded layer as of now so we are considering 10 output sinceoutput can be 0 to 9
 
 #creating placeholder
-input_matrix=tf.placeholder(dtype=tf.float32,shape=([None,total_pixel_input]))#(no of rows*728)
-output_matrix=tf.placeholder(dtype=tf.float32,shape=([None,total_neuron]))
+input_matrix=tf.placeholder(dtype=tf.float32,shape=[None,total_pixel_input])#(no of rows*728)
+output_matrix=tf.placeholder(dtype=tf.float32,shape=[None,total_neuron])
 
 #creating variable
 w=tf.Variable(tf.random_normal(shape=[total_pixel_input,total_neuron]))#(728*10)
@@ -40,4 +40,4 @@ training_steps=100
 for i in range(training_steps):
     batch_x,batch_y=mnist.train.next_batch(100)
     # my_comp_data=sess.run([y,train_data,],feed_dict={input_matrix:batch_x,output_matrix:batch_y})
-    mycross_entropy=sess.run(loss,feed_dict={input_matrix:batch_x,output_matrix:batch_y})
+    mycross_entropy=sess.run([loss],feed_dict={input_matrix:batch_x,output_matrix:batch_y})
