@@ -7,7 +7,7 @@ c=tf.multiply(a,b,name='input_c')
 d=tf.add(a,b,name='input_d')
 e=tf.add(c,d,name= 'input_e')'''
 
-"""#this is part two of tensor grapg
+#this is part two of tensor grapg
 a=tf.constant([5,3])
 b=tf.reduce_prod(a)#this function multiply a value amoung itself
 c=tf.reduce_sum(a)
@@ -17,7 +17,7 @@ sess=tf.Session()
 # print(sess.run(e))
 # writer = tf.train.summary.FileWriter('./my_graph', sess.graph)
 
-# writer = tf.summary.FileWriter("output", sess.graph)
+writer = tf.summary.FileWriter("output", sess.graph)
 print(sess.run(e))
 
 #this part will explain us feed dictionary concepts
@@ -36,7 +36,7 @@ c=tf.reduce_prod(b)
 sess=tf.Session()
 # out=sess.run(c,feed_dict={a:[2,3]})
 out=sess.run(c,feed_dict={a:np.array([2,3], dtype=np.int32)})#feedinf 2d tensor as input
-print (out)"""
+print (out)
 
 #this part we are dealing with thw variable
 

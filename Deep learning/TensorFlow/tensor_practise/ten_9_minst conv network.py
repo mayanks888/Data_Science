@@ -1,6 +1,8 @@
 import tensorflow as tf
 import  numpy as np
 import matplotlib.pyplot as plt
+from tensorflow.python import debug as tf_debug
+
 
 from tensorflow.examples.tutorials.mnist import input_data
 mnist=input_data.read_data_sets('MNIST_data/',one_hot=1)
@@ -13,7 +15,7 @@ hidden_layer_neuron=100
 output=10#this does not have hidded layer as of now so we are considering 10 output sinceoutput can be 0 to 9
 seed_val=10
 epochs=10
-batch=10
+batch=1
 learning_rate=.03
 drop_out=0.85
 input_matrix=tf.placeholder(dtype=tf.float32,shape=[None,total_pixel_input])#(no of rows*728)
@@ -76,7 +78,8 @@ init = tf.global_variables_initializer()
 
 sess=tf.Session()
 sess.run(init)
-
+# sess = tf_debug.LocalCLIDebugWrapperSession(sess)
+# sess.add_tensor_filter("has_inf_or_nan", tf_debug.has_inf_or_nan)
 
 for i in range(epochs):
     batch_x, batch_y = mnist.train.next_batch(batch)
@@ -85,6 +88,8 @@ for i in range(epochs):
     layer_output,mycross_entropy, my_softmax_val, all_cross_ent, _ = sess.run([pred_value,loss, softmax_output,total_cross_entropy, optimizer],
                                                                  feed_dict={input_matrix: batch_x,output_matrix: batch_y,drop_out_val:drop_out})
 
+    # feed_dicy=({input_matrix:input_data1, bias: bias['bc1']})
+    # conv1_val=sess.run(create_conv2d)
     my_prediction_train = tf.equal(tf.argmax(my_softmax_val, 1), tf.argmax(batch_y,1))  # comparing max index of softmax output and true y output matrix
     # cast convert true to 1 an false to 0
     accuray = tf.reduce_mean(tf.cast(my_prediction_train, tf.float32))
