@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
-
+from tensorflow.python import debug as tf_debug
 xlabel=np.linspace(0,10,10)+np.random.uniform(-1.5,1.5,10)
 ylabel=np.linspace(0,10,10)+np.random.uniform(-1.5,1.5,10)
 
@@ -21,6 +21,7 @@ init=tf.global_variables_initializer()
 
 sess=tf.Session()
 sess.run(init)
+sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
 training_steps=5
 
 for i in range(training_steps):

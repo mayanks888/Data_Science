@@ -17,7 +17,8 @@ sess=tf.Session()
 # print(sess.run(e))
 # writer = tf.train.summary.FileWriter('./my_graph', sess.graph)
 
-writer = tf.summary.FileWriter("output", sess.graph)
+writer = tf.summary.FileWriter("/home/mayank-s/PycharmProjects/output_graph", sess.graph)
+# writer.add_graph(sess.graph)
 print(sess.run(e))
 
 #this part will explain us feed dictionary concepts

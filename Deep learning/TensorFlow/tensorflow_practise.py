@@ -10,14 +10,14 @@ z = y + 3
 init=tf.global_variables_initializer()
 sess=tf.Session()
 sess.run(init)
-
+sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
 # sess = tf_debug.TensorBoardDebugWrapperSession(sess, "http://0.0.0.0:6006/#debugger")
 
 # sess.run(my_fetches)
 x_data = [[1, 2, 3],
          [4, 5, 6],]
 result = sess.run(z, feed_dict={x: x_data})
-sess = tf_debug.TensorBoardDebugWrapperSession(sess, "mayank:7000")
+# sess = tf_debug.TensorBoardDebugWrapperSession(sess, "mayank:7000")
 # sess.run(my_fetches)
 # new_result=sess.run(y,feed_dict={x: x_data})
 # print(sess.run(x))
