@@ -78,6 +78,7 @@ init = tf.global_variables_initializer()
 
 sess=tf.Session()
 sess.run(init)
+sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
 # sess = tf_debug.LocalCLIDebugWrapperSession(sess)
 # sess.add_tensor_filter("has_inf_or_nan", tf_debug.has_inf_or_nan)
 
