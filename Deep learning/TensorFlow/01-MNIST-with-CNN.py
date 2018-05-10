@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-
+from tensorflow.python import debug as tf_debug
 mnist = input_data.read_data_sets("MNIST_data/",one_hot=True)
 
 # Function to help intialize random weights for fully connected or convolutional layers, we leave the shape attribute as a parameter for this.
@@ -105,7 +105,7 @@ steps = 80
 with tf.Session() as sess:
     
     sess.run(init)
-    
+    sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
     for i in range(steps):
         
         batch_x , batch_y = mnist.train.next_batch(100)

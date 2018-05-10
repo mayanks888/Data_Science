@@ -14,9 +14,9 @@ total_pixel_input=784#28X28 matrix
 hidden_layer_neuron=100
 output=10#this does not have hidded layer as of now so we are considering 10 output sinceoutput can be 0 to 9
 seed_val=10
-epochs=10
-batch=1
-learning_rate=.03
+epochs=100
+batch=100
+learning_rate=.0001
 drop_out=0.85
 input_matrix=tf.placeholder(dtype=tf.float32,shape=[None,total_pixel_input])#(no of rows*728)
 output_matrix=tf.placeholder(dtype=tf.float32,shape=[None,output])
@@ -24,7 +24,8 @@ drop_out_val = tf.placeholder(tf.float32)
 
 def create_conv2d(input_matrix,filter_weight,bias,strides=1):
     val=tf.nn.conv2d(input=input_matrix,filter=filter_weight,strides=[1,strides,strides,1],padding='SAME')
-    new_val=tf.nn.bias_add(val,bias)
+    # new_val=tf.nn.bias_add(val,bias)
+    new_val = val+ bias
     return tf.nn.relu(new_val)
 
 
@@ -39,37 +40,46 @@ def convolution_layers(input_data,weight,bias,dropouts):
     conv2=create_conv2d(maxp1,weight['wc2'],bias['bc2'])#second layer
     maxp2 = max_pool(conv2,k=2)
     # Reshape conv2 output to match the input of fully connected layer
-    fc1 = tf.reshape(maxp2, [-1, weight['wd1'].get_shape().as_list()[0]])
+    fc1 = tf.reshape(maxp2, [-1, weight['wd1'].get_shape().as_list()[0]],name="FULlreshape")
     fcl_input=tf.add(tf.matmul(fc1,weight['wd1']),bias['bd1'])
     fcl_output=tf.nn.relu(fcl_input)
     fc1_dropout = tf.nn.dropout(fcl_output, dropouts)#giving drop to to reduce overfitting
     #final_out=tf.add(tf.matmul(fc1_dropout,weight['out']),bias['out'])
     final_out=tf.add(tf.matmul(fcl_output,weight['out']),bias['out'])
-    return final_out
+    softmax_output = tf.nn.softmax(final_out, name="My_softmax")
+    return softmax_output
 
 #creating filters
 fil_weights = {
 # 5x5 conv, 1 input, and 32 outputs
-'wc1': tf.Variable(tf.random_normal([5, 5, 1, 32])),
+'wc1': tf.Variable(tf.truncated_normal([5, 5, 1, 32])),
 # 5x5 conv, 32 inputs, and 64 outputs
-'wc2': tf.Variable(tf.random_normal([5, 5, 32, 64])),
+'wc2': tf.Variable(tf.truncated_normal([5, 5, 32, 64])),
 # fully connected, 7*7*64 inputs, and 1024 outputs
-'wd1': tf.Variable(tf.random_normal([7*7*64, 1024])),
+'wd1': tf.Variable(tf.truncated_normal([7*7*64, 1024])),
+# 'wd1': tf.Variable(tf.random_normal([7,7,64, 1024])),
 # 1024 inputs, 10 outputs for class digits
-'out': tf.Variable(tf.random_normal([1024, output]))
+'out': tf.Variable(tf.truncated_normal([1024, output]))
+}0
+#
+biases = {
+'bc1': tf.Variable(tf.random_normal([32],mean=.1,stddev=.01)),
+'bc2': tf.Variable(tf.random_normal([64],mean=.1,stddev=.01)),
+'bd1': tf.Variable(tf.random_normal([1024],mean=.1,stddev=.01)),
+'out': tf.Variable(tf.random_normal([output],mean=.1,stddev=.01)),
 }
 
-biases = {
-'bc1': tf.Variable(tf.random_normal([32])),
-'bc2': tf.Variable(tf.random_normal([64])),
-'bd1': tf.Variable(tf.random_normal([1024])),
-'out': tf.Variable(tf.random_normal([output]))
-}
+# biases = {
+# 'bc1': tf.Variable(tf.constant([.1])),
+# 'bc2': tf.Variable(tf.constant([.1])),
+# 'bd1': tf.Variable(tf.constant([.1])),
+# 'out': tf.Variable(tf.constant([.1]))
+# }
 
 
 pred_value=convolution_layers(input_data=input_matrix,weight=fil_weights,bias=biases,dropouts=drop_out_val)
-softmax_output=tf.nn.softmax(pred_value)
-total_cross_entropy=tf.nn.softmax_cross_entropy_with_logits(logits=softmax_output,labels=output_matrix)
+# softmax_output=tf.nn.softmax(pred_value,name="My_softmax")
+total_cross_entropy=tf.nn.softmax_cross_entropy_with_logits(logits=pred_value,labels=output_matrix)
 loss=tf.reduce_mean(total_cross_entropy)
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
 # correct_prediction = tf.equal(tf.argmax(pred_value, 1), tf.argmax(output_matrix, 1))
@@ -79,14 +89,13 @@ init = tf.global_variables_initializer()
 sess=tf.Session()
 sess.run(init)
 sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
-# sess = tf_debug.LocalCLIDebugWrapperSession(sess)
-# sess.add_tensor_filter("has_inf_or_nan", tf_debug.has_inf_or_nan)
+
 
 for i in range(epochs):
     batch_x, batch_y = mnist.train.next_batch(batch)
     # actual_weight, actual_bias=sess.run([weight,bias])
     # print (actual_weight)
-    layer_output,mycross_entropy, my_softmax_val, all_cross_ent, _ = sess.run([pred_value,loss, softmax_output,total_cross_entropy, optimizer],
+    layer_output,mycross_entropy, my_softmax_val, all_cross_ent, _ = sess.run([pred_value,loss, pred_value,total_cross_entropy, optimizer],
                                                                  feed_dict={input_matrix: batch_x,output_matrix: batch_y,drop_out_val:drop_out})
 
     # feed_dicy=({input_matrix:input_data1, bias: bias['bc1']})
