@@ -60,7 +60,7 @@ fil_weights = {
 # 'wd1': tf.Variable(tf.random_normal([7,7,64, 1024])),
 # 1024 inputs, 10 outputs for class digits
 'out': tf.Variable(tf.truncated_normal([1024, output]))
-}0
+}
 #
 biases = {
 'bc1': tf.Variable(tf.random_normal([32],mean=.1,stddev=.01)),

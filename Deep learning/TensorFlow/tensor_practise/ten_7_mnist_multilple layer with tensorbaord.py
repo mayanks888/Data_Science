@@ -12,8 +12,8 @@ total_pixel_input=784#28X28 matrix
 hidden_layer_neuron=100
 output=10#this does not have hidded layer as of now so we are considering 10 output sinceoutput can be 0 to 9
 seed_val=10
-epochs=200
-batch=100
+epochs=150
+batch=1
 input_matrix=tf.placeholder(dtype=tf.float32,shape=[None,total_pixel_input])#(no of rows*728)
 output_matrix=tf.placeholder(dtype=tf.float32,shape=[None,output])
 
@@ -54,9 +54,34 @@ accuray = tf.reduce_mean(tf.cast(my_prediction_train, tf.float32),name='accuracy
 
 init=tf.global_variables_initializer()
 
+def variable_summaries(var):
+  """Attach a lot of summaries to a Tensor (for TensorBoard visualization)."""
+  with tf.name_scope('summaries'):
+    mean = tf.reduce_mean(var)
+    tf.summary.scalar('mean', mean)
+    with tf.name_scope('stddev'):
+      stddev = tf.sqrt(tf.reduce_mean(tf.square(var - mean)))
+    tf.summary.scalar('stddev', stddev)
+    tf.summary.scalar('max', tf.reduce_max(var))
+    tf.summary.scalar('min', tf.reduce_min(var))
+    tf.summary.histogram('histogram', var)
+#_________________________________________________
+tf.summary.histogram("Softmax", ol_output)
+variable_summaries(weight['ih'])
+# variable_summaries(bias['ih'])
+# tf.summary.histogram("prediction", my_prediction_train)
+# tf.summary.scalar('cross entropy', cross_entropy_val)
+tf.summary.scalar("Acuracy", accuray)
+tf.summary.scalar("Loss", loss)
+summary_op = tf.summary.merge_all()
+#_________________________________________________
+
 sess=tf.Session()
 sess.run(init)
 # sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
+
+summary_writer = tf.summary.FileWriter('/home/mayank-s/PycharmProjects/Data_Science/output_graph/try2',sess.graph)
+
 
 for i in range(epochs):
     batch_x, batch_y = mnist.train.next_batch(batch)
@@ -65,10 +90,11 @@ for i in range(epochs):
     # mycross_entropy, my_softmax_val, all_cross_ent, _ = sess.run([loss, ol_output, cross_entropy_val, optimiser],
     #                                                              feed_dict={input_matrix: batch_x,
     #                                                                                 output_matrix: batch_y})
-    mycross_entropy, myaccuracy, all_cross_ent, _,Sof_output,y_input = sess.run([loss, accuray, cross_entropy_val, optimiser,ol_output,Actual_output],
+    mysumary,mycross_entropy, myaccuracy, all_cross_ent, _,Sof_output,y_input = sess.run([summary_op,loss, accuray, cross_entropy_val, optimiser,ol_output,Actual_output],
                                                                  feed_dict={input_matrix: batch_x,
                                                                             output_matrix: batch_y})
 
+    summary_writer.add_summary(mysumary, i)
 
     '''my_prediction_train = tf.equal(tf.argmax(my_softmax_val, 1), tf.argmax(batch_y,1))  # comparing max index of softmax output and true y output matrix
     # cast convert true to 1 an false to 0

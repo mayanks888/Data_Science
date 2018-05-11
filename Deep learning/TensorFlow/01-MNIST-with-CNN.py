@@ -100,6 +100,22 @@ train = optimizer.minimize(cross_entropy)
 init = tf.global_variables_initializer()
 
 
+#_________________________________________________
+#
+# my_prediction_train = tf.equal(tf.argmax(ol_output,1), tf.argmax(output_matrix,1))
+# accuray = tf.reduce_mean(tf.cast(my_prediction_train, tf.float32),name='accuracy')
+#
+# tf.summary.histogram("Softmax", ol_output)
+# # variable_summaries(weight['ih'])
+# # variable_summaries(bias['ih'])
+# # tf.summary.histogram("prediction", my_prediction_train)
+# # tf.summary.scalar('cross entropy', cross_entropy_val)
+# tf.summary.scalar("Acuracy", accuray)
+# tf.summary.scalar("Loss", loss)
+# summary_op = tf.summary.merge_all()
+# #_________________________________________________
+
+
 steps = 80
 
 with tf.Session() as sess:
