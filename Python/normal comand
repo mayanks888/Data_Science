@@ -1,0 +1,74 @@
+My important command
+---------------------------------------------------------------------------------------------------
+
+Shift ubunto python to new version
+
+alias python=python3
+
+---------------------------------------------------------------------------------------------------
+
+revert back
+
+alias python=python2#change pytho version ubunto
+
+---------------------------------------------------------------------------------------------------
+
+enable tensorflow in terminal window
+
+source Tensorflow-dev/bin/activate
+
+---------------------------------------------------------------------------------------------------
+
+install tool:
+
+removing software: - sudo apt-get remove spyder
+
+update tool : sudo apt-get upgrade firefox
+
+---------------------------------------------------------------------------------------------------
+
+5) Defining address in pandas( ../ =jump one folder up)
+
+pd.read_csv('../../../data_folder/data.csv')
+
+-------------------------------------------------------------------------------------------------------------------
+
+this is  tensorflow debugger:
+
+
+from tensorflow.python import debug as tf_debug
+sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
+
+tensorboard --logdir /tmp/logdir --debugger_port 7000
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+tensorboard:
+
+tensorboard --logdir=./Home/PycharmProjects/output_graph/
+
+tensorboard --logdir=./output_graph/
+
+Defining graph:  writer = tf.summary.FileWriter("/home/mayank-s/PycharmProjects/output_graph", sess.graph)
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+Basis address of python file
+
+/home/mayank-s/PycharmProjects/Data_Science/Deep learning/TensorFlow
+
+------------------------------------------------------------------------------------------------------------------------
+
+calcualtor: gnome-calculator
+
+------------------------------------------------------------------------------------------------------------------------
+
+Define value in python
+
+plt.title('Example: %d Label: %d' % (num, label))#to print properly
