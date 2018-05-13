@@ -116,12 +116,12 @@ init = tf.global_variables_initializer()
 # #_________________________________________________
 
 
-steps = 80
+steps = 150
 
 with tf.Session() as sess:
     
     sess.run(init)
-    sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
+    # sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
     for i in range(steps):
         
         batch_x , batch_y = mnist.train.next_batch(100)

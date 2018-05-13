@@ -12,8 +12,8 @@ total_pixel_input=784#28X28 matrix
 hidden_layer_neuron=100
 output=10#this does not have hidded layer as of now so we are considering 10 output sinceoutput can be 0 to 9
 seed_val=10
-epochs=150
-batch=1
+epochs=1500
+batch=100
 input_matrix=tf.placeholder(dtype=tf.float32,shape=[None,total_pixel_input])#(no of rows*728)
 output_matrix=tf.placeholder(dtype=tf.float32,shape=[None,output])
 
@@ -77,10 +77,11 @@ summary_op = tf.summary.merge_all()
 #_________________________________________________
 
 sess=tf.Session()
+# sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
 sess.run(init)
 # sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
 
-summary_writer = tf.summary.FileWriter('/home/mayank-s/PycharmProjects/Data_Science/output_graph/try2',sess.graph)
+summary_writer = tf.summary.FileWriter('..\..\..\output_graph/try2',sess.graph)
 
 
 for i in range(epochs):

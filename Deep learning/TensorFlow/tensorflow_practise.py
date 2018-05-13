@@ -10,7 +10,9 @@ z = y + 3
 init=tf.global_variables_initializer()
 sess=tf.Session()
 sess.run(init)
-sess = tf_debug.TensorBoardDebugWrapperSession(sess, "MAYANK_PC:7000")
+# sess = tf_debug.TensorBoardDebugWrapperSession(sess, "MAYANK_PC:7000")
+sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
+
 # sess = tf_debug.TensorBoardDebugWrapperSession(sess, "MAYANK_PC:6064")
 # sess.run(my_fetches)
 # sess = tf_debug.TensorBoardDebugWrapperSession(sess, "http://0.0.0.0:6006/#debugger")

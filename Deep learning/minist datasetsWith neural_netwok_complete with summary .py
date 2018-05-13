@@ -115,12 +115,12 @@ for myrecord in data_list:
     else:
         status_list.append(0)
     #for showing image
-    # image_array = np.asfarray(scaled_input.reshape(28, 28))
-    # plt.imshow(image_array, cmap='Greys', interpolation='None')
-    # plt.show()
+    image_array = np.asfarray(scaled_input.reshape(28, 28))
+    plt.imshow(image_array, cmap='Greys', interpolation='None')
+    plt.show()
 
 
-print status_list
+print (status_list)
 
 print ("the accuracy is ", float(float (right_predict_flag)/float(len(status_list))))
 

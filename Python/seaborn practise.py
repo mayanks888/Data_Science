@@ -2,10 +2,10 @@ import numpy as np
 import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
-'''
-# data=pd.read_csv('Salaries.csv')
-data2=pd.read_csv('Startups.csv')
-# dat=data.head(100)
+
+data=pd.read_csv('C:/Users/mayank/Documents/Datasets/Salaries.csv')
+data2=pd.read_csv("C:/Users/mayank/Documents/Datasets/Startups.csv")
+dat=data.head(100)
 print(data2.head())
 # distribution plot
 my_data=sns.distplot(data['TotalPay'],kde=False,bins=40)
@@ -58,8 +58,8 @@ plt.show()
 # sns.lmplot(x='Profit',y='R&D Spend',data=data2,hue='State')
 sns.lmplot(x='Profit',y='R&D Spend',data=data2)
 
-plt.show()'''
-'''
+plt.show()
+
 iris=sns.load_dataset('iris')#load inbuilt data sets like iris ,tips,flight
 print (iris.head())
 
@@ -69,15 +69,15 @@ gr=sns.PairGrid(iris)
 gr.map_diag(sns.distplot)
 gr.map_upper(plt.scatter)
 gr.map_lower(sns.kdeplot)
-plt.show()'''
+plt.show()
 
 #working on tips datasets
 tips=sns.load_dataset('tips')
 print (tips.head())
 
-'''gpr=sns.FacetGrid(data=tips,col='time',row='smoker')
+gpr=sns.FacetGrid(data=tips,col='time',row='smoker')
 gpr.map(sns.distplot,'total_bill')
-plt.show()'''
+plt.show()
 
 
 
