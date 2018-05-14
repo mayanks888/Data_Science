@@ -42,6 +42,18 @@ sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
 tensorboard --logdir /tmp/logdir --debugger_port 7000
 
 
+#Keras
+import tensorflow as tf
+from keras import backend as keras_backend
+from tensorflow.python import debug as tf_debug
+
+keras_backend.set_session(tf_debug.TensorBoardDebugWrapperSession(tf.Session(),"localhost:7000"))
+
+# Define your keras model, called "model".
+
+#before model.fit
+model.fit(...)
+
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -53,10 +65,17 @@ tensorboard --logdir=./output_graph/
 
 Defining graph:  writer = tf.summary.FileWriter("/home/mayank-s/PycharmProjects/output_graph", sess.graph)
 
-
 windows
 summary_writer = tf.summary.FileWriter('..\..\..\output_graph/try2',sess.graph)
 
+
+#Keras
+
+from keras.callbacks import TensorBoard
+cb=TensorBoard(log_dir=("/home/mayank-s/PycharmProjects/Data_Science/output_graph/try3"))
+myclaisfer.fit(X_train,y_train,batch_size=10,nb_epoch=3,  callbacks=[cb])
+
+tensorboard --logdir=./output_graph/
 
 ------------------------------------------------------------------------------------------------------------------------
 
