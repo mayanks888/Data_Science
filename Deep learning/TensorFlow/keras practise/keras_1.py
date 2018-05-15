@@ -1,12 +1,13 @@
 # import tensorflow.keras.models.Sequential  as tf
 import tensorflow as tf
-from keras import backend as keras_backend
+
 from keras.layers import Convolution2D
 from keras.layers import Conv2D
 from keras.layers import MaxPooling2D
 from keras.models import Sequential
 from keras.layers import Flatten
 from keras.layers import Dense
+from keras import backend as keras_backend
 from keras.callbacks import TensorBoard
 from tensorflow.python import debug as tf_debug
 
