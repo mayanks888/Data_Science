@@ -33,7 +33,7 @@ myclassifier.add(Dense(output_dim=1,activation='sigmoid'))
 
 myclassifier.compile(optimizer="adam",loss='binary_crossentropy',metrics=['accuracy'])
 
-
+print (myclassifier.summary())
 
 #image argumentation
 from keras.preprocessing.image import ImageDataGenerator
@@ -53,6 +53,7 @@ training_data = train_datagen.flow_from_directory(directory="../../../Datasets/c
                                                     target_size=(64, 64),
                                                     batch_size=32,
                                                     class_mode='binary')
+
 #this is for winodows path
 '''test_validation = test_datagen.flow_from_directory("C:/Users/mayank/Documents/Datasets/Cat_dogs/test",
                                                         target_size=(64, 64),
