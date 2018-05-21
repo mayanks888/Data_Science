@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report,confusion_matrix
-dataset=pd.read_csv('../../../Datasets/Churn_Modelling.csv')
+dataset=pd.read_csv('../../../../Datasets/Churn_Modelling.csv')
 
 print (dataset.head())
 # dataset['Geography']= (dataset['Geography'].str.strip())

@@ -74,14 +74,14 @@ train_datagen = ImageDataGenerator(rescale=1./255,
 test_datagen = ImageDataGenerator(rescale=1./255)
 #this is for winodows path
 
-training_data = train_datagen.flow_from_directory(directory="../../../Datasets/cat_dogs/train",
+training_data = train_datagen.flow_from_directory(directory="../../../../Datasets/cat_dogs/train",
                                                     target_size=(224, 224),
                                                     batch_size=8,
                                                     class_mode='binary')
 
 #this is for winodows path
 
-test_validation = test_datagen.flow_from_directory("../../../Datasets/cat_dogs/test",
+test_validation = test_datagen.flow_from_directory("../../../../Datasets/cat_dogs/test",
                                                         target_size=(224, 224),
                                                         batch_size=8,
                                                         class_mode='binary')
@@ -107,7 +107,7 @@ from keras.preprocessing import image
 
 # test_image=image.load_img(path="C:/Users/mayank/Documents/Datasets/Cat_dogs/test1/509.jpg",target_size=(64,64))
 #linux path
-test_image=image.load_img(path="../../../Datasets/cat_dogs/test1/525.jpg",target_size=(224,224))
+test_image=image.load_img(path="../../../../Datasets/cat_dogs/test1/525.jpg",target_size=(224,224))
 test_image=image.img_to_array(test_image)
 test_image=np.expand_dims(test_image,axis=0)
 result=custom_vgg_model2.predict(test_image)

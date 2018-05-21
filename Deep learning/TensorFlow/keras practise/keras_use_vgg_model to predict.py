@@ -76,7 +76,7 @@ from keras.preprocessing import image
 
 # test_image=image.load_img(path="C:/Users/mayank/Documents/Datasets/Cat_dogs/test1/509.jpg",target_size=(64,64))
 #linux path
-test_image=image.load_img(path="../../../Datasets/cat_dogs/test1/506.jpg",target_size=(224,224))
+test_image=image.load_img(path="../../../../Datasets/cat_dogs/test1/506.jpg",target_size=(224,224))
 test_image=image.img_to_array(test_image)
 test_image=np.expand_dims(test_image,axis=0)
 result=base_model.predict(test_image)
