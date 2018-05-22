@@ -4,9 +4,9 @@ import xml.etree.ElementTree as ET
 import numpy as np
 # bounding box
 labels=['cat','dog']
-xmlPath='/home/mayank-s/PycharmProjects/Datasets/single_object_detecetion/american_bulldog_135.xml'
+xmlPath='/home/mayank-s/PycharmProjects/Datasets/single_object_detection/american_bulldog_135.xml'
 xmlPath='american_bulldog_135.xml'
-side=7
+
 def parseXML(xmlPath, labels,pixel_size):
     """
     Args:
@@ -29,8 +29,6 @@ def parseXML(xmlPath, labels,pixel_size):
         ymax = int(bndbox.find('ymax').text)
         h = ymax - ymin
         w = xmax - xmin
-        # objif = objInfo(xmin/448.0,ymin/448.0,np.sqrt(ymax-ymin)/448.0,np.sqrt(xmax-xmin)/448.0,class_num)
-
         # which cell this obj falls into
         centerx = (xmax + xmin) / 2.0
         centery = (ymax + ymin) / 2.0
@@ -76,7 +74,7 @@ bottom=(363,58)
     --------x2,y2'''
 
 my_image=cv2.imread('american_bulldog_135.jpg',1)
-image_scale=cv2.resize(my_image,dsize=(220,220),interpolation=cv2.INTER_NEAREST)
+image_scale=cv2.resize(my_image,dsize=(224,224),interpolation=cv2.INTER_NEAREST)
 
 # this is for stretch image
 cv2.rectangle(my_image, pt1=top,pt2=bottom,color= (0,255,0), thickness=2)

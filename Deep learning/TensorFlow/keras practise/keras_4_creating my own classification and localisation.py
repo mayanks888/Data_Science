@@ -2,9 +2,12 @@ import os
 import xml.etree.ElementTree as ET
 import pandas as pd
 
-
 imageNameFile="fsg"
-vocPath="/home/mayank-s/PycharmProjects/Datasets/single_object_detecetion"
+# vocPath="/home/mayank-s/PycharmProjects/Datasets/single_object_detecetion"
+
+#windows
+# vocPath="C:/Users/mayank/Documents/Datasets/single_object_detection"
+vocPath=r"C:\Users\mayank\Documents\Datasets\single_object_detection"
 all_xml=[]
 for file in os.listdir(os.path.join(vocPath,'annotations','xmls')):
     if file.endswith(".xml"):
@@ -12,47 +15,8 @@ for file in os.listdir(os.path.join(vocPath,'annotations','xmls')):
         all_xml.append(file)
 
 
-my_imagelist =[]
-my_xmlist=[]
-label = ['dog', 'cat']
-for xml_file in all_xml:
-   myslpit=xml_file.split(".xml")
-   my_xmlist.append(os.path.join(vocPath,xml_file))
-   my_imagelist.append(os.path.join(vocPath,'images',myslpit[0])+'.jpg')
 
-
-# First I will try to create a raw training data of all image raw data and annotation data
-def prepareBatch(start,end,imageNameFile,vocPath):
-    my_imagelist = []
-    my_xmlist=[]
-    label = ['dog', 'cat']
-    for xml_file in all_xml:
-        myslpit=xml_file.split(".xml")
-        xmlist.append(os.path.join(vocPath,xml_file)
-        my_imagelist(os.path.join(vocPath,'images',myslpit[0])+'.jpg')
-        
-        #imgPath = os.path.join(vocPath,'JPEGImages',imgName)+'.jpg'
-       #xmlPath = os.path.join(vocPath,'Annotations',imgName)+'.xml'
-        
-
-
-
-    imageList = []
-    labels = ["aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train","tvmonitor"]
-    file = open(imageNameFile)
-    imageNames = file.readlines()
-    
-    for i in range(start,end):
-        imgName = imageNames[i].strip('/n')
-        imgPath = os.path.join(vocPath,'JPEGImages',imgName)+'.jpg'
-        xmlPath = os.path.join(vocPath,'Annotations',imgName)+'.xml'
-        img = image(side=7,imgPath=imgPath)
-        img.parseXML(xmlPath,labels,7)
-        imageList.append(img)
-
-    return imageList
-
-def parseXML(xmlPath, labels, side):
+def parseXML(xmlPath, labels,pixel_size):
     """
     Args:
       xmlPath: The path of the xml file of this image
@@ -74,33 +38,69 @@ def parseXML(xmlPath, labels, side):
         ymax = int(bndbox.find('ymax').text)
         h = ymax - ymin
         w = xmax - xmin
-        # objif = objInfo(xmin/448.0,ymin/448.0,np.sqrt(ymax-ymin)/448.0,np.sqrt(xmax-xmin)/448.0,class_num)
-
         # which cell this obj falls into
         centerx = (xmax + xmin) / 2.0
         centery = (ymax + ymin) / 2.0
         #448 is size of the input image
-        newx = (448.0 / width) * centerx
-        newy = (448.0 / height) * centery
+        newx = (pixel_size / width) * centerx
+        newy = (pixel_size / height) * centery
 
-        h_new = h * (448.0 / height)
-        w_new = w * (448.0 / width)
+        h_new = h * (pixel_size / height)
+        w_new = w * (pixel_size / width)
 
-        cell_size = 448.0 / side
-        col = int(newx / cell_size)
-        row = int(newy / cell_size)
-        # print "row,col:",row,col,centerx,centery
+        new_xmin=int(newx-(w_new/2))
+        new_xmax=int(newx+(w_new/2))
+        new_ymin=int(newy-(h_new/2))
+        new_ymax=int(newy+(h_new/2))
+        return (new_xmax,new_xmin,new_ymax,new_ymin,class_num)
 
-        cell_left = col * cell_size
-        cell_top = row * cell_size
-        cord_x = (newx - cell_left) / cell_size
-        cord_y = (newy - cell_top) / cell_size
 
-        #objif = objInfo(cord_x, cord_y, np.sqrt(h_new / 448.0), np.sqrt(w_new / 448.0), class_num)
-        #self.boxes[row][col].has_obj = True
-        #self.boxes[row][col].objs.append(objif)
+my_imagelist =[]
+my_xmlist=[]
+xml_val_list=[]
+label = ['dog', 'cat']
+for xml_file in all_xml:
+   myslpit=xml_file.split(".xml")
+   new_path=os.path.join(vocPath,'annotations','xmls',xml_file)
+   my_xmlist.append(new_path)
+   my_imagelist.append(os.path.join(vocPath,'images',myslpit[0])+'.jpg')
+   # new_path=r"C:\Users\mayank\Documents\Datasets\single_object_detection\annotations\xmls\Abyssinian_10.xml"
+   k,l,m,n,cls_label=parseXML(new_path, label, pixel_size=224)
+   xml_val_list.append([cls_label,k,l,m,n])
 
-# mylabel='head'
-side=7
-mylabel = ["aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train","tvmonitor"]
-parseXML(xml_source,mylabel,side)
+df=pd.DataFrame(data=(my_imagelist))
+df2=pd.DataFrame(data=(xml_val_list))
+result = pd.concat([df, df2], axis=1, join='inner')
+#df.append(xml_val_list)
+result.to_csv('SortedXmlresult')
+# First I will try to create a raw training data of all image raw data and annotation data
+'''def prepareBatch(start,end,imageNameFile,vocPath):
+    my_imagelist = []
+    my_xmlist=[]
+    label = ['dog', 'cat']
+    for xml_file in all_xml:
+        myslpit=xml_file.split(".xml")
+        my_xmlist.append(os.path.join(vocPath,xml_file))
+        my_imagelist(os.path.join(vocPath,'images',myslpit[0])+'.jpg')
+        k,l,m,n=parseXML((vocPath,xml_file),label,pixel_size=220)
+        #imgPath = os.path.join(vocPath,'JPEGImages',imgName)+'.jpg'
+       #xmlPath = os.path.join(vocPath,'Annotations',imgName)+'.xml'
+        
+
+
+
+    imageList = []
+    labels = ["aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train","tvmonitor"]
+    file = open(imageNameFile)
+    imageNames = file.readlines()
+    
+    for i in range(start,end):
+        imgName = imageNames[i].strip('/n')
+        imgPath = os.path.join(vocPath,'JPEGImages',imgName)+'.jpg'
+        xmlPath = os.path.join(vocPath,'Annotations',imgName)+'.xml'
+        img = image(side=7,imgPath=imgPath)
+        img.parseXML(xmlPath,labels,7)
+        imageList.append(img)
+
+    return imageList'''
+
