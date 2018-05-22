@@ -92,3 +92,7 @@ calcualtor: gnome-calculator
 Define value in python
 
 plt.title('Example: %d Label: %d' % (num, label))#to print properly
+------------------------------------------------------------------------------------------------------------------------
+#reading datasets
+1. windows
+../../../../Datasets
