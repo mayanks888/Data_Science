@@ -14,7 +14,7 @@ total_pixel_input=784#28X28 matrix
 hidden_layer_neuron=100
 output=10#this does not have hidded layer as of now so we are considering 10 output sinceoutput can be 0 to 9
 seed_val=10
-epochs=1
+epochs=50
 batch=100
 learning_rate=.03
 drop_out=0.85
@@ -22,8 +22,8 @@ input_matrix=tf.placeholder(dtype=tf.float32,shape=[None,total_pixel_input],name
 output_matrix=tf.placeholder(dtype=tf.float32,shape=[None,output],name="outpu_matrix")
 drop_out_val = tf.placeholder(tf.float32)
 
-def create_conv2d(input_matrix,filter_weight,bias,strides=1):
-    val=tf.nn.conv2d(input=input_matrix,filter=filter_weight,strides=[1,strides,strides,1],padding='SAME')
+def create_conv2d(input_matrix_converted,filter_weight,bias,strides=1):
+    val=tf.nn.conv2d(input=input_matrix_converted,filter=filter_weight,strides=[1,strides,strides,1],padding='SAME')
     new_val=tf.nn.bias_add(val,bias)
     return tf.nn.relu(new_val)
 

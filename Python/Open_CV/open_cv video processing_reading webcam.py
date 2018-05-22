@@ -13,3 +13,6 @@ while(True):
         break
 cap.release()
 cv2.destroyAllWindows()
+
+
+l].objs.append(objif)

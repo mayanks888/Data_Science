@@ -8,8 +8,8 @@ import scipy
 import random
 
 
-vocPath = os.path.abspath(os.path.join(os.getcwd(),os.path.pardir,'dataset'))
-
+vocPath = os.path.abspath(os.path.join(oos.path.pardir,'dataset'))
+os.getcwd(),
 class objInfo():
     """
     objInfo saves the information of an object, including its class num, its cords
