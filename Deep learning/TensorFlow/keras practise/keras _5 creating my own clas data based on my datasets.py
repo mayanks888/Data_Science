@@ -1,7 +1,6 @@
 import cv2
 import os
 import xml.etree.ElementTree as ET
-import  keras
 import  pandas as pd
 import numpy as np
 from keras.utils import np_utils
@@ -31,7 +30,7 @@ num_classes=1
 dataset = pd.read_csv("SortedXmlresult_linux.csv")
 x = dataset.iloc[:, 1].values
 y = dataset.iloc[:, 2].values
-
+z=dataset.iloc[:, 3:8].values
 
 # this was used to categorise label if they are more than tow
 y_test = np_utils.to_categorical(y, 2)#cotegorise label
@@ -43,7 +42,6 @@ for loop in x:
     imagelist.append(image_scale)#added all pixel values in list
 
 image_list_array=np.array(imagelist)#convet list into array since all calculation required array input
-
 
 new_image_input,y=shuffle(image_list_array,y,random_state=4)#shuffle data (good practise)
 
@@ -66,22 +64,14 @@ x = Dense(128, activation='relu', name='fc1')(x)
 x = Dense(128, activation='relu', name='fc2')(x)
 out = Dense(num_classes, activation='sigmoid', name='output')(x)
 # custom_vgg_model2 = base_model(input_shape,out)
-# custom_vgg_model2 = Model(input_shape,out)
-
-# _______________________________________________________________
-# creating parallel layers for image localisations
-normisation_output=Dense(4, activation='relu', name='norm_output')(x)
-merge_layer = keras.layers.concatenate([out, normisation_output],axis=1)
-custom_vgg_model2 = Model(input_shape,merge_layer)
-custom_vgg_model2.summary()
-# --------------------------------------------------------------------------
+custom_vgg_model2 = Model(input_shape,out)
 
 # freeze all the layers except the dense layers
-for layer in custom_vgg_model2.layers[:-4]:
+for layer in custom_vgg_model2.layers[:-3]:
 	layer.trainable = False
 
-
-
+custom_vgg_model2.summary()
+custom_vgg_model2.compile(loss='binary_crossentropy',optimizer='adadelta',metrics=['accuracy'])
 #------------------------------------------------------
 # Image argumentation
 
@@ -97,24 +87,9 @@ datagen = ImageDataGenerator(
 # (std, mean, and principal components if ZCA whitening is applied)
 datagen.fit(X_train)
 
-
-cb=TensorBoard(log_dir=("/home/mayank-s/PycharmProjects/Data_Science/output_graph/try5"))#,histogram_freq = 1, batch_size = 32,write_graph ="TRUE" )
-
-# ______________
-model.compile(optimizer='adadelta',metrics=['accuracy'],
-              loss={'out': 'binary_crossentropy', 'normisation_output': 'binary_crossentropy'},
-              loss_weights={'out': 1., 'normisation_output': 0.2})
-
-# And trained it via:
-model.fit({'main_input': headline_data, 'aux_input': additional_data},
-          {'main_output': labels, 'aux_output': labels},
-          epochs=50, batch_size=32)
-# _________________
-
-custom_vgg_model2.compile(loss='binary_crossentropy',optimizer='adadelta',metrics=['accuracy'])
 # fits the model on batches with real-time data augmentation:
-custom_vgg_model2.fit_generator(generator={'out': datagen.flow(X_train, y_train),'normisation_output':datagen.flow(X_train, new_train)}, batch_size=32,
-                    steps_per_epoch=len(X_train) / 32, epochs=epochs,callbacks=[cb])
+custom_vgg_model2.fit_generator(datagen.flow(X_train, y_train, batch_size=32),
+                    steps_per_epoch=len(X_train) / 32, epochs=epochs)
 
 
 
