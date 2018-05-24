@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report,confusion_matrix
-dataset=pd.read_csv('../../../../Datasets/Churn_Modelling.csv')
+#dataset=pd.read_csv('../../../../Datasets/Churn_Modelling.csv')
+dataset=pd.read_csv('/home/mayank-s/PycharmProjects/Datasets/Churn_Modelling.csv')
 
 print (dataset.head())
 # dataset['Geography']= (dataset['Geography'].str.strip())
@@ -53,6 +54,9 @@ myclaisfer=Sequential()
 myclaisfer.add(Dense(units=6,kernel_initializer='uniform',activation='relu',input_dim=11))
 myclaisfer.add(Dense(units=6,kernel_initializer='uniform',activation='relu'))
 myclaisfer.add(Dense(units=1,kernel_initializer='uniform',activation='sigmoid'))
+myclaisfer.summary()
+out = myclaisfer.layers[(0)].output#reading any dense layer
+#weight_out = myclaisfer.get_layer(0).get_weights()[0]#this will showthe weight asssign to dense layer 
 myclaisfer.compile(optimizer='adam',loss='binary_crossentropy',metrics=['accuracy'])
 # myclaisfer.fit(X_train,y_train,batch_size=10,nb_epoch=3,  callbacks = callback_tensorboard("/home/mayank-s/PycharmProjects/output_graph"))
 myclaisfer.fit(X_train,y_train,batch_size=10,nb_epoch=3,  callbacks=[cb])
@@ -61,3 +65,4 @@ print(y_predict)
 y_predict=(y_predict>0.50)
 print (confusion_matrix(y_test,y_predict))
 
+print (out.value)

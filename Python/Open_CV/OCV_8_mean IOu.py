@@ -30,10 +30,14 @@ def bb_intersection_over_union(boxA, boxB):
     return iou
 
 
-ground=[190,64,119,57]
-predicted=[200,80,158,60]
+
+
+
+ground=[64,57,190,119]
+predicted=[64,57,190,119]
+# predicted=[80,60,200,158]
 ground=np.array(ground)
 predicted=np.array(predicted)
-# print(bb_intersection_over_union(predicted,ground))
+print(bb_intersection_over_union(predicted,ground))
 
-print(tf.metrics.mean_iou(labels=predicted,predictions=predicted,num_classes=1,weights=0))
+# print(tf.metrics.mean_iou(labels=ground,predictions=predicted,num_classes=1))

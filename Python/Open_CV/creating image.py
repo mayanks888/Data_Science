@@ -11,13 +11,14 @@ one=np.ones([150,200,1],dtype='uint8')
 # cv2.imshow('black2',one)#nothing will happen with ones
 
 white=one*255#chanhing my array to val to 255 which is equalent to 255
-cv2.imshow('white',white)
+#cv2.imshow('white',white)
 # creating color array of image
-create_color=np.random.random_integers(low=1,high=244,size=[150,200,1],)
+create_color=np.random.random_integers(low=1,high=244,size=[150,200,1],dtype='uint8')
+creare_color=np.array(create_color)
 print(create_color)
 print ('shape of color image is',create_color.shape)
 print('pixel value',create_color[1,2,0])
 cv2.imshow('color image',create_color)
 
-cv2.waitKey(0)
+cv2.waitKey(5000)
 cv2.destroyAllWindows()

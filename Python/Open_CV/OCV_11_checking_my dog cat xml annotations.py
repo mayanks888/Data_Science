@@ -12,9 +12,9 @@ y = dataset.iloc[:, 3:8].values
 val=0
 #for loop,xml_aray in zip(x, y):
 for loop in x:
-
-    top = (y[val,1], y[val,2])
-    bottom = (y[val,0], y[val,3])
+# [Xmin,ymin,xmax,ymax]
+    top = (y[val,0], y[val,3])
+    bottom = (y[val,2], y[val,1])
 
     my_image=cv2.imread(loop,1)
     image_scale=cv2.resize(my_image,dsize=(224,224),interpolation=cv2.INTER_NEAREST)

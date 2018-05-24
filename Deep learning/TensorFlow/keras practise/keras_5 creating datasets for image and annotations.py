@@ -52,7 +52,7 @@ def parseXML(xmlPath, labels,pixel_size):
         new_xmax=int(newx+(w_new/2))
         new_ymin=int(newy-(h_new/2))
         new_ymax=int(newy+(h_new/2))
-        return (new_xmax,new_xmin,new_ymax,new_ymin,class_num)
+        return (new_xmin,new_ymin,new_xmax,new_ymax,class_num)
 
 
 my_imagelist =[]
@@ -65,13 +65,13 @@ for xml_file in all_xml:
    my_xmlist.append(new_path)
    my_imagelist.append(os.path.join(vocPath,'images',myslpit[0])+'.jpg')
    # new_path=r"C:\Users\mayank\Documents\Datasets\single_object_detection\annotations\xmls\Abyssinian_10.xml"
-   k,l,m,n,cls_label=parseXML(new_path, label, pixel_size=224)
-   xml_val_list.append([cls_label,k,l,m,n])
+   xmin,ymin,xmax,ymax,cls_label=parseXML(new_path, label, pixel_size=224)
+   xml_val_list.append([cls_label,xmin,ymin,xmax,ymax])
 
 df=pd.DataFrame(data=(my_imagelist))
 df2=pd.DataFrame(data=(xml_val_list))
 result = pd.concat([df, df2], axis=1, join='inner')
 #df.append(xml_val_list)
 # result.to_csv('SortedXmlresult')
-result.to_csv('SortedXmlresult_linux')
+result.to_csv('SortedXmlresult_linux.csv')
 # First I will try to create a raw training data of all image raw data and annotation data

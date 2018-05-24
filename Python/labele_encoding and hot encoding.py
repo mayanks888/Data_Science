@@ -14,7 +14,7 @@ features=data.iloc[:,0:2].values#method 2
 labels=data.iloc[:,-1].values
 
 
-dt=pd.DataFrame(features)#juct for our head view convert feature into data frame
+dt=pd.DataFrame(features)#juct for overhead view convert feature into data frame
 
 label_encode=LabelEncoder()
 
