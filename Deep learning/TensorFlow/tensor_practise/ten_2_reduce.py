@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-x = [1., 2., 3.]
+'''x = [1., 2., 3.]
 y = [1., 2., 3.]
 z = [0., 1., 3.]
 # __________________________________________-
@@ -75,8 +75,18 @@ print(sess.run(tf.squeeze(segdata)))#this will reset your tensor matrix into bes
 change_dim=(tf.expand_dims(segdata,1))#increase the diminsion of tensor(now row ,column and depth can be treated as x axis y axis and z axis)
 
 print (change_dim,sess.run(change_dim))
-print(sess.run(tf.shape(change_dim)))#printing shape of tensor
+print(sess.run(tf.shape(change_dim)))#printing shape of tensor'''
 
 
 
+#checking reduce means
+sum_check=tf.constant([1,2,3,4,5,6,7,8,9,14,24,34,49,55,46,7,82,9,32,43],shape=[5,4],dtype=tf.float32)
+data1=tf.reduce_sum(sum_check,axis=1)
+data2=tf.reduce_sum(sum_check,[1])
 
+sess=tf.Session()
+print(sess.run(sum_check))
+
+print ('\n',sess.run(data1))
+
+print ('\n',sess.run(data2))

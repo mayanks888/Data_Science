@@ -152,21 +152,28 @@ acc = tf.reduce_mean(tf.cast(train_matches, tf.float32))
 # intialiasing all variable
 
 init=tf.global_variables_initializer()
-
-epochs=20
+saver=tf.train.Saver()
+epochs=1
 
 sess=tf.Session()
 sess.run(init)
-sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
+# This will assign all true variable to my model
+saver.restore(sess, "../../../../Datasets/MNIST_data/wrong_weight/model.ckpt")
+print('Accuracy is:')
+print(sess.run(acc, feed_dict={x: scaled_test, y_true: y_test, hold_prob: 1.0}))
+
+# sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
 # X_train, X_test, y_train, y_test = train_test_split(new_image_input, y, test_size = .10, random_state = 4)#splitting data (no need if test data is present
 
-for loop in range(epochs):
+# print('Currently on step {}'.format(loop))
+
+'''for loop in range(epochs):
     # ______________________________________________________________________
     # my batch creater
     # Construct an array data source
     ds = data_source.ArrayDataSource([scaled_input, y_train])
     # Iterate over samples, drawing batches of 64 elements in random order
-    for (batch_X, batch_y) in ds.batch_iterator(batch_size=1000, shuffle=True):#shuffle true will randomise every batch
+    for (batch_X, batch_y) in ds.batch_iterator(batch_size=5000, shuffle=True):#shuffle true will randomise every batch
     # for (batch_X, batch_y) in ds.batch_iterator(batch_size=1000, shuffle=np.random.RandomState(12345)):
         _,accuracy=sess.run([train,acc], feed_dict={x: batch_X, y_true: batch_y, hold_prob: 0.5})
         print("the train accuracy is:", accuracy)
@@ -186,32 +193,8 @@ for loop in range(epochs):
 
         print(sess.run(acc, feed_dict={x: scaled_test, y_true: y_test, hold_prob: 1.0}))
 
+    save_path = saver.save(sess, "../../../../Datasets/MNIST_data/model_weight/model.ckpt")'''
 
 
 
 
-
-
-
-
-
-
-
-
-
-'''for i in range(epochs):
-    batch_x, batch_y = mnist.train.next_batch(batch)
-    # actual_weight, actual_bias=sess.run([weight,bias])
-    # print (actual_weight)
-    layer_output,mycross_entropy, my_softmax_val, all_cross_ent, _ = sess.run([pred_value,loss, pred_value,total_cross_entropy, optimizer],
-                                                                 feed_dict={input_matrix: batch_x,output_matrix: batch_y,drop_out_val:drop_out})
-
-    # feed_dicy=({input_matrix:input_data1, bias: bias['bc1']})
-    # conv1_val=sess.run(create_conv2d)
-    my_prediction_train = tf.equal(tf.argmax(my_softmax_val, 1), tf.argmax(batch_y,1))  # comparing max index of softmax output and true y output matrix
-    # cast convert true to 1 an false to 0
-    accuray = tf.reduce_mean(tf.cast(my_prediction_train, tf.float32))
-    prediction_val, final_acuracy = (sess.run([my_prediction_train, accuray]))
-    print ('epoch no ', i)
-    #print("predicted value are", prediction_val)
-    print('accuracy ', final_acuracy * 100)'''

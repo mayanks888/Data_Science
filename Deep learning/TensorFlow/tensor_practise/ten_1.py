@@ -17,6 +17,7 @@ print(dm_3[0,2,1])#print element of (0 dim arrat,3 row, 2nd column)(remember in 
 val=tf.constant([1,2])#one dimensional matrix or vector(tensor of rank 1)
 val2=tf.constant([[1,2,3],[7,5,3]])#2d matrix( tenosor of rank 2
 val3=tf.constant([[[1,5],[2,7],[3,9]],[[4,7],[5,63],[6,78]]],dtype=tf.float32)#(3 dimsion matrix)(tensor of rank 3
+con_data=tf.constant(.1,shape=(3,4),dtype=tf.float32)#another way to create a array of constant
 sess=tf.Session()
 print (sess.run(val[1]))
 print (sess.run(val2[1,2]))
