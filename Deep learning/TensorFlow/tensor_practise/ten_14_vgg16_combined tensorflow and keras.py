@@ -76,4 +76,4 @@ custom_vgg_model2 = tf.keras.Model(inputshape,out)
 for layer in custom_vgg_model2.layers[:-3]:
 	layer.trainable = False
 
-custom_vgg_model2.summary()
+custom_vgg_model2.summary()#
