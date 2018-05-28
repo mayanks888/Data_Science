@@ -158,7 +158,7 @@ epochs=1
 sess=tf.Session()
 sess.run(init)
 # This will assign all true variable to my model
-saver.restore(sess, "../../../../Datasets/MNIST_data/wrong_weight/model.ckpt")
+saver.restore(sess, "../../../../Datasets/MNIST_data/model_weight/model.ckpt")
 print('Accuracy is:')
 print(sess.run(acc, feed_dict={x: scaled_test, y_true: y_test, hold_prob: 1.0}))
 

@@ -157,7 +157,7 @@ epochs=20
 
 sess=tf.Session()
 sess.run(init)
-sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
+#sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
 # X_train, X_test, y_train, y_test = train_test_split(new_image_input, y, test_size = .10, random_state = 4)#splitting data (no need if test data is present
 
 for loop in range(epochs):

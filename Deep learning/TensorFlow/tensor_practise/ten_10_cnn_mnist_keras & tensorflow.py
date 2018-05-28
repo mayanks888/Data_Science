@@ -85,7 +85,18 @@ hold_prob = tf.placeholder(tf.float32)#this made to pass the user defined value 
 full_one_dropout = tf.nn.dropout(first_dense,keep_prob=hold_prob)
 
 output_layer =tf.keras.layers.Dense(10, activation='relu', name='output1')(full_one_dropout)
-
+# _______________________________________________________
+# input_tensor = tf.keras.Input(shape=(28,28,1))
+#
+# custom_vgg_model2 = tf.keras.Model(x,output_layer1)
+#
+# # Trying different things
+# # freeze all the layers except the dense layers
+#
+# for layer in custom_vgg_model2.layers[:-3]:
+# 	layer.trainable = False
+#
+# output_layer=custom_vgg_model2.output
  # ---------------------------------------------------------------------------
 # first method
 softmax_output=tf.nn.softmax(logits=output_layer)
