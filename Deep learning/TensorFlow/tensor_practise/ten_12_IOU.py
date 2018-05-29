@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
-
-'''def bbox_iou_corner_xy(bboxes1, bboxes2):
+from tensorflow.python import debug as tf_debug
+def bbox_iou_corner_xy(bboxes1, bboxes2):
     """
     Args:
         bboxes1: shape (total_bboxes1, 4)
@@ -99,13 +99,13 @@ if __name__ == '__main__':
             bboxes1: np.array(bboxes1_vals),
             bboxes2: np.array(bboxes2_vals),
         })
-        print(overlap)'''
+        print(overlap)
 
 
 
 #And here is a implementation for the YOLO style format
 
-def bbox_iou_center_xy(bboxes1, bboxes2):
+'''def bbox_iou_center_xy(bboxes1, bboxes2):
     """ same as `bbox_iou_corner_xy', except that we have
         center_x, center_y, w, h instead of x1, y1, x2, y2 """
 
@@ -135,7 +135,7 @@ def bbox_iou_center_xy(bboxes1, bboxes2):
 
 
 
-'''def find_iou(data_ground, data_predicted):
+def find_iou(data_ground, data_predicted):
     print("e")
     xminofmax = tf.maximum(data_ground[0], data_predicted[0])
     yminofmax = tf.maximum(data_ground[1], data_predicted[1])
@@ -175,7 +175,7 @@ if __name__ == '__main__':
     data_ground1=np.resize(data_ground,(data_ground.shape[1],4))
     data_predicted1=np.resize(data_predicted,(data_predicted.shape[1],4))
     overlap = sess.run(overlap_op,feed_dict={groundbb: data_ground1, predicted_bb: data_predicted1})
-    print(overlap)'''
+    print(overlap)
 
 
 # data_ground=np.transpose(np.array([[13,15,16],[12,14,15],[17,19,20],[20,30,35]]))
@@ -184,15 +184,45 @@ if __name__ == '__main__':
 # print(iou_metric(data_ground,data_predicted))
 
 # '_______________________________________________---' \
-data_ground = tf.placeholder(shape=(None,4),dtype=tf.float32)
-data_predicted = tf.placeholder(shape=(None,4),dtype=tf.float32)#overlap_op=groundbb+predicted_bb
+    
+import tensorflow as tf
+import numpy as np
 
-xminofmax = tf.maximum(data_ground[0], data_predicted[0])
-yminofmax = tf.maximum(data_ground[1], data_predicted[1])
-xmaxofmin = tf.minimum(data_ground[2], data_predicted[2])
-ymaxofmin = tf.minimum(data_ground[3], data_predicted[3])
 
-interction = ((xmaxofmin - xminofmax + 1) * (ymaxofmin - yminofmax + 1))
+
+
+
+def find_iou(data_ground,data_predicted):
+    xminofmax = tf.maximum((data_ground[:,0]),(data_predicted[:,0]))
+    yminofmax = tf.maximum(data_ground[:,1], data_predicted[:,1])
+    xmaxofmin = tf.minimum(data_ground[:,2], data_predicted[:,2])
+    ymaxofmin = tf.minimum(data_ground[:,3], data_predicted[:,3])
+    
+    #Sub=(xmaxofmin - xminofmax + 1)
+    sub1=tf.add(tf.subtract(xmaxofmin,xminofmax),1)
+    sub2=tf.add(tf.subtract(ymaxofmin,yminofmax),1)
+    intercetion=tf.multiply(sub1,sub2)
+    
+    
+    aog1=tf.add(tf.abs(tf.subtract(data_ground[:,0],data_ground[:,2])),1)
+    
+    aog2=tf.add(tf.abs(tf.subtract(data_ground[:,1],data_ground[:,3])),1)
+    
+    AOG=tf.multiply(aog1,aog2)
+    
+    aop1=tf.add(tf.abs(tf.subtract(data_predicted[:,0],data_predicted[:,2])),1)
+    
+    aop2=tf.add(tf.abs(tf.subtract(data_predicted[:,1],data_predicted[:,3])),1)
+    
+    AOP=tf.multiply(aog1,aog2)
+    
+    Union=tf.subtract(tf.add(AOG,AOP),intercetion)
+    iou=tf.divide(intercetion,Union)
+    mean_iou=tf.reduce_mean(iou)
+#AOG = (tf.abs(data_ground[0] - data_ground[2]) + 1) * (tf.abs(data_ground[1] - data_ground[3]) 
+
+
+#interction = ((xmaxofmin - xminofmax + 1) * (ymaxofmin - yminofmax + 1))
 # i have added 1 to all the equation save the equation from giving 0 iou value
 #    AOG: area of ground box
 AOG = (tf.abs(data_ground[0] - data_ground[2]) + 1) * (tf.abs(data_ground[1] - data_ground[3]) + 1)
@@ -204,17 +234,47 @@ mean_iou = tf.reduce_mean(iou)
 
 
 
+data_g=np.array([[64,57,190,119],
+                [77,23,160,79],
+                [77,26,146,118],
+                [75,12,148,108]])
+    
 
+data_ground = tf.placeholder(shape=(None,4),dtype=tf.float32)
+data_predicted = tf.placeholder(shape=(None,4),dtype=tf.float32)#overlap_op=groundbb+predicted_bb
+overlap=find_iou(data_ground,data_predicted)
 
 # data1=np.random.randint(low=10,high=50,size=(4,3))
-data_ground=np.array([[13,15,16],[12,14,15],[17,19,20],[20,30,35]])
-data_predicted=np.array([[15,19,20],[14,16,14],[19,22,25],[21,34,32]])
-data_ground=np.array([13.0,15.0,16.0,22.0])
-data_predicted=np.array([15.0,19.0,17.0,25.0])
+#data_g=np.array([[13,15,16],[12,14,15],[17,19,20],[20,30,35]])
+#data_p=np.array([[15,19,20],[14,16,14],[19,22,25],[21,34,32]])
+# data_g=np.array([13.0,15.0,16.0,22.0])
+# data_p=np.array([15.0,19.0,17.0,25.0])
+#
+# #
+# data_g=np.transpose(data_g)
+# data_p=np.transpose(data_p)
+
+# data_ground=[1,2,3,4]
+# data_predicted=[2,5,3,6]
+
 # data_ground1=np.resize(data_ground,(data_ground.shape[1],4))
 # data_predicted1=np.resize(data_predicted,(data_predicted.shape[1],4))
 
+data_g = np.array([[64, 57, 190, 119],
+                   [77, 23, 160, 79],
+                   [77, 26, 146, 118]])
+
+# data_g=data_g.transpose()
+data_p = data_g + 50
+feed_dict1=({data_ground: data_g, data_predicted: data_p})
 sess = tf.Session()
-overlap = sess.run(mean_iou,feed_dict=({data_ground: data_ground, data_predicted: data_predicted}))
+#sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
+overlap= sess.run([overlap],feed_dict=feed_dict1)
 print(overlap)
-# '______________________________________________________'
+
+oz,mo,intc,uni = sess.run([xminofmax,yminofmax,interction,union],feed_dict=feed_dict1)
+#print(overlap)
+print(mo,'\n',oz,'\n',intc,'\n',uni)
+# '__________________________________
+oz,mo,AOG1 = sess.run([mean_iou,AOP,AOG],feed_dict=feed_dict1)
+print(oz,'\n',mo,'\n',AOG1)'''

@@ -14,7 +14,7 @@ from sklearn.metrics import classification_report,confusion_matrix
 import tensorflow as tf
 from batchup import data_source
 
-num_classes=4
+num_classes=1
 
 # dataset = pd.read_csv("SortedXmlresult.csv")
 #
@@ -23,13 +23,13 @@ num_classes=4
 dataset = pd.read_csv("../../../../Datasets/SortedXmlresult_linux.csv")
 x = dataset.iloc[:, 1].values
 y = dataset.iloc[:, 2].values
-y=dataset.iloc[:, 3:8].values
+z=dataset.iloc[:, 3:8].values
 
-# new_val_y=np.resize(y,(y.shape[0],1))
+new_val_y=np.resize(y,(y.shape[0],1))
 
 #y=y.resize(y.shape[0],1)
 # this was used to categorise label if they are more than tow
-# y_test = np_utils.to_categorical(y, 2)#cotegorise label
+y_test = np_utils.to_categorical(y, 2)#cotegorise label
 
 imagelist=[]
 for loop in x:
@@ -41,11 +41,12 @@ image_list_array=np.array(imagelist)#convet list into array since all calculatio
 
 new_image_input,y=shuffle(image_list_array,y,random_state=4)#shuffle data (good practise)
 
-X_train, X_test, y_train, y_test = train_test_split(new_image_input, y, test_size = .20, random_state = 4)#splitting data (no need if test data is present
+X_train, X_test, y_train, y_test = train_test_split(new_image_input, new_val_y, test_size = .20, random_state = 4)#splitting data (no need if test data is present
 
 # ### Placeholders
 input_x = tf.placeholder(tf.float32,shape=[None,224,224,3])
-y_true = tf.placeholder(tf.float32,shape=[None,4])
+y_true = tf.placeholder(tf.float32,shape=[None,1])
+
 # ### Layers
 # x_image = tf.reshape(x,[-1,224,224,3])
 
@@ -65,13 +66,12 @@ hold_prob = tf.placeholder(tf.float32)#this made to pass the user defined value 
 full_one_dropout = tf.nn.dropout(x,keep_prob=hold_prob)
 
 x = tf.keras.layers.Dense(128, activation='relu', name='fc2')(x)
-x= tf.keras.layers.Dense(num_classes,activation='relu',name='fc3')(x)
-last_layer_out = tf.keras.layers.Dense(num_classes,activation='relu',name='output')(x)
+last_layer_out = tf.keras.layers.Dense(num_classes, activation='sigmoid', name='output')(x)
 # custom_vgg_model2 = base_model(input_shape,out)
 custom_vgg_model2 = tf.keras.Model(x_image,last_layer_out)
 
 # freeze all the layers except the dense layers
-for layer in custom_vgg_model2.layers[:-4]:
+for layer in custom_vgg_model2.layers[:-3]:
 	layer.trainable = False
 
 print (custom_vgg_model2.summary())
@@ -79,47 +79,28 @@ print (custom_vgg_model2.summary())
 out=custom_vgg_model2.output
 
 # ---------------------------------------------------------------------------
-def find_my_iou(data_ground, data_predicted):
-    xminofmax = tf.maximum((data_ground[:, 0]), (data_predicted[:, 0]))
-    yminofmax = tf.maximum(data_ground[:, 1], data_predicted[:, 1])
-    xmaxofmin = tf.minimum(data_ground[:, 2], data_predicted[:, 2])
-    ymaxofmin = tf.minimum(data_ground[:, 3], data_predicted[:, 3])
+# first method
+# softmax_output=tf.nn.softmax(logits=out)
+'''entropy_loss_per_row=(y_true * tf.log(softmax_output))#formula for cross entropy
+# formula for cross entropy (L=−∑i=0kyilnp^i)
+sum_loss_per_row = (-tf.reduce_sum(entropy_loss_per_row,axis=1))#"-" you have to check(axis=1 since I was row wise sum)
+# loss_per_row = (-tf.reduce_sum(y_true * tf.log(softmax_output),[1]))#formula for cross entropy
+cross_entropy_mean=tf.reduce_mean(sum_loss_per_row)
+#loss function
 
-    # Sub=(xmaxofmin - xminofmax + 1)
-    sub1 = tf.add(tf.subtract(xmaxofmin, xminofmax), 1)
-    sub2 = tf.add(tf.subtract(ymaxofmin, yminofmax), 1)
-    intercetion = tf.multiply(sub1, sub2)
 
-    aog1 = tf.add(tf.abs(tf.subtract(data_ground[:, 0], data_ground[:, 2])), 1)
 
-    aog2 = tf.add(tf.abs(tf.subtract(data_ground[:, 1], data_ground[:, 3])), 1)
-
-    AOG = tf.multiply(aog1, aog2)
-
-    aop1 = tf.add(tf.abs(tf.subtract(data_predicted[:, 0], data_predicted[:, 2])), 1)
-
-    aop2 = tf.add(tf.abs(tf.subtract(data_predicted[:, 1], data_predicted[:, 3])), 1)
-
-    AOP = tf.multiply(aog1, aog2)
-
-    Union = tf.subtract(tf.add(AOG, AOP), intercetion)
-    iou = tf.divide(intercetion, Union)
-    mean_iou = tf.reduce_mean(iou)
-    return mean_iou
-
-# iou_loss=find_my_iou(y_true,out)
-# loss=1-iou_loss
-loss=tf.losses.mean_squared_error(y_true,out)
-# loss=tf.metrics.mean_iou(labels=y_true,predictions=out,num_classes=4)
+# cross_entropy_mean = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=y_true,logits=out))
+'''
 # -------------------------------------------------------------------------------
-
+# p * -tf.log(q) + (1 - p) * -tf.log(1 - q):binary cross entropy
+cross_entropy_mean=tf.keras.backend.binary_crossentropy(y_true,out,from_logits=False)
 
 optimizer = tf.train.AdadeltaOptimizer(learning_rate=0.0001)#Inistising your optimising functions
-train = optimizer.minimize(loss)#
+train = optimizer.minimize(cross_entropy_mean)#
 
-#correct_prediction = tf.equal(tf.round(out),y_true)
-# acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-acc=loss
+correct_prediction = tf.equal(tf.round(out),y_true)
+acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 #acc=tf.metrics.accuracy(labels=y_true,predictions=out)
 # intialiasing all variable
 
@@ -129,7 +110,7 @@ epochs=20
 
 sess=tf.Session()
 sess.run(init)
-# sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
+sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
 # X_train, X_test, y_train, y_test = train_test_split(new_image_input, y, test_size = .10, random_state = 4)#splitting data (no need if test data is present
 
 for loop in range(epochs):
@@ -138,11 +119,9 @@ for loop in range(epochs):
     # Construct an array data source
     ds = data_source.ArrayDataSource([X_train, y_train])
     # Iterate over samples, drawing batches of 64 elements in random order
-    for (batch_X, batch_y) in ds.batch_iterator(batch_size=9, shuffle=True):#shuffle true will randomise every batch
-        _,accuracy,output=sess.run([train,acc,out], feed_dict={input_x: batch_X, y_true: batch_y, hold_prob: 0.5})
+    for (batch_X, batch_y) in ds.batch_iterator(batch_size=2, shuffle=True):#shuffle true will randomise every batch
+        _,accuracy=sess.run([train,acc], feed_dict={input_x: (batch_X), y_true: batch_y, hold_prob: 0.5})
         print("the train accuracy is:", accuracy)
-        print('thre ytrue is ',batch_y)
-        print("the output is",output)
          # ________________________________________________________________________
 
     if loop % 1 == 0:
