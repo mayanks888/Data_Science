@@ -66,12 +66,13 @@ full_one_dropout = tf.nn.dropout(x,keep_prob=hold_prob)
 
 x = tf.keras.layers.Dense(128, activation='relu', name='fc2')(x)
 x= tf.keras.layers.Dense(num_classes,activation='relu',name='fc3')(x)
-last_layer_out = tf.keras.layers.Dense(num_classes,activation='relu',name='output')(x)
+last_layer_out1 = tf.keras.layers.Dense(num_classes,activation='relu',name='output')(x)
+last_layer_out = tf.keras.layers.Dense(num_classes,name='output1')(last_layer_out1)
 # custom_vgg_model2 = base_model(input_shape,out)
 custom_vgg_model2 = tf.keras.Model(x_image,last_layer_out)
 
 # freeze all the layers except the dense layers
-for layer in custom_vgg_model2.layers[:-4]:
+for layer in custom_vgg_model2.layers[:-5]:
 	layer.trainable = False
 
 print (custom_vgg_model2.summary())
@@ -114,7 +115,7 @@ loss=tf.losses.mean_squared_error(y_true,out)
 # -------------------------------------------------------------------------------
 
 
-optimizer = tf.train.AdadeltaOptimizer(learning_rate=0.0001)#Inistising your optimising functions
+optimizer = tf.train.AdadeltaOptimizer(learning_rate=1)#Inistising your optimising functions
 train = optimizer.minimize(loss)#
 
 #correct_prediction = tf.equal(tf.round(out),y_true)
@@ -138,18 +139,18 @@ for loop in range(epochs):
     # Construct an array data source
     ds = data_source.ArrayDataSource([X_train, y_train])
     # Iterate over samples, drawing batches of 64 elements in random order
-    for (batch_X, batch_y) in ds.batch_iterator(batch_size=9, shuffle=True):#shuffle true will randomise every batch
+    for (batch_X, batch_y) in ds.batch_iterator(batch_size=5, shuffle=True):#shuffle true will randomise every batch
         _,accuracy,output=sess.run([train,acc,out], feed_dict={input_x: batch_X, y_true: batch_y, hold_prob: 0.5})
         print("the train accuracy is:", accuracy)
-        print('thre ytrue is ',batch_y)
+        print('the ytrue is ',batch_y)
         print("the output is",output)
          # ________________________________________________________________________
 
-    if loop % 1 == 0:
-        print('Currently on step {}'.format(loop))
-        print('Accuracy is:')
-        # Test the Train Modelsess.run(train, feed_dict={x: batch_x, y_true: batch_y, hold_prob: 0.5})
-        correct_prediction = tf.equal(tf.round(out), y_true)
-        acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-        print(sess.run(acc, feed_dict={x: X_test, y_true: y_test, hold_prob: 1.0}))
+    # if loop % 1 == 0:
+    #     print('Currently on step {}'.format(loop))
+    #     print('Accuracy is:')
+    #     # Test the Train Modelsess.run(train, feed_dict={x: batch_x, y_true: batch_y, hold_prob: 0.5})
+    #     correct_prediction = tf.equal(tf.round(out), y_true)
+    #     acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    #     print(sess.run(acc, feed_dict={x: X_test, y_true: y_test, hold_prob: 1.0}))
 
