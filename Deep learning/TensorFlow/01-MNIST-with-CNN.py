@@ -116,7 +116,7 @@ init = tf.global_variables_initializer()
 # #_________________________________________________
 
 
-steps = 150
+steps = 1500
 
 with tf.Session() as sess:
     

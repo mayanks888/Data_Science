@@ -3,7 +3,8 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 
 imageNameFile="fsg"
-vocPath="/home/mayank-s/PycharmProjects/Datasets/single_object_detection"
+vocPath="../../../../Datasets/single_object_detection"
+# vocPath="/home/mayank-s/PycharmProjects/Datasets/single_object_detection"
 
 #windows
 # vocPath="C:/Users/mayank/Documents/Datasets/single_object_detection"
@@ -73,5 +74,5 @@ df2=pd.DataFrame(data=(xml_val_list))
 result = pd.concat([df, df2], axis=1, join='inner')
 #df.append(xml_val_list)
 # result.to_csv('SortedXmlresult')
-result.to_csv('SortedXmlresult_linux.csv')
+result.to_csv('SortedXmlresult_linux1.csv')
 # First I will try to create a raw training data of all image raw data and annotation data
