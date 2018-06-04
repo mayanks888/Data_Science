@@ -134,4 +134,5 @@ if __name__ == '__main__':
     data_handler.get_file_list(data, label_file)
     data1, labels1,ims = data_handler.load_data(0, 1)
     print(data1.shape, labels1.shape,ims.shape)
+    print(labels1,ims)
 

@@ -16,16 +16,16 @@ Written in Cython for optimization.
 # Written by Sergey Karayev
 # --------------------------------------------------------
 
-cimport cython
+import cython
 import numpy as np
-cimport numpy as np
+import numpy as np
 
 DTYPE = np.float
-ctypedef np.float_t DTYPE_t
+# ctypedef np.float_t DTYPE_t
 
-def bbox_overlaps(
-        np.ndarray[DTYPE_t, ndim=2] boxes,
-        np.ndarray[DTYPE_t, ndim=2] query_boxes):
+def bbox_overlaps():
+    np.ndarray[DTYPE_t, ndim=2] boxes,
+    np.ndarray[DTYPE_t, ndim=2] query_boxes):
     """
     Parameters
     ----------
@@ -63,4 +63,4 @@ def bbox_overlaps(
                         box_area - iw * ih
                     )
                     overlaps[n, k] = iw * ih / ua
-    return overlaps
+     return overlaps
