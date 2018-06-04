@@ -141,3 +141,11 @@ class RegionProposalNetwork(object):
         far                       = tf.abs(x) - 0.5/sigma ** 2
 
         return tf.where(conditional, close, far)
+
+# def main():
+#     gt_box=
+#     anchor_scal = [8, 16, 32]
+#     mode='train'
+#     detector        = RegionProposalNetwork(features, gt_bbox['train'], image_dims['train'], anchor_scal,mode)
+#     # detector.read_data('/home/fensi/nas/KITTI_OBJECT/train.txt', '/home/fensi/nas/KITTI_OBJECT/label.txt')
+#     # detector.train()

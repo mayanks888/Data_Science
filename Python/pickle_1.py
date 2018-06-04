@@ -7,7 +7,7 @@ with open("100573400.pkl",mode= 'rb',) as pickle_file:
     print(myfile)
 
     cv2.imshow("myfilw",myfile)
-    cv2.waitKey(500)
+    cv2.waitKey(0)
     cv2.destroyAllWindows()
 # 1a6ac4cb629c3b68b9c8fe1db822d396.pkl
 # 100573400.pkl

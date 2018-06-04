@@ -2,6 +2,18 @@ import numpy as np
 K=np
 # from keras import backend as K
 
+def box_overlap(anchorbb,groundbb):
+    overlap=[]
+    N=anchorbb.shape[0]
+    K=groundbb.shape[0]
+    for n in range(N):
+        for k in range(K):
+            overlap[n,k]=find_iou(groundbb(k),anchorbb(n))
+
+
+
+
+
 def find_iou(groundbb, predicted_bb):
     data_ground = groundbb
     data_predicted = predicted_bb
