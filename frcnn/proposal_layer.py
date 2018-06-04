@@ -3,7 +3,7 @@ import tensorflow as tf
 import bbox_transform
 import generate_anchors 
 import cpu_nms
-
+# this is used while testing
 def proposal_layer(rpn_bbox_cls_prob, rpn_bbox_pred, im_dims, mode, feat_strides, anchor_scales):
     blob = tf.py_func(proposal_layer_py, [rpn_bbox_cls_prob, rpn_bbox_pred, im_dims, mode, feat_strides, anchor_scales], [tf.float32])
     return tf.reshape(blob, [-1, 5])
@@ -92,13 +92,13 @@ def proposal_layer_py(rpn_bbox_cls_prob, rpn_bbox_pred, im_dims, mode, feat_stri
     # step7: take after_nms_topN 
     proposals                  = proposals[keep,:]
     scores                     = scores[keep]
-    print "proposals.shape after nms", proposals.shape
-    print "scores.shape", scores.shape
+    print ("proposals.shape after nms", proposals.shape)
+    print ("scores.shape", scores.shape)
     # step8: return the top proposal
     batch_inds                 = np.zeros( (proposals.shape[0], 1), dtype=np.float32) # [ len(keep), 1]
     
     blob                       = np.hstack( (batch_inds, proposals.astype(np.float32, copy=False))) # proposal structure: [0,x1,y1,x2,y2]
-    print "blob.shape", blob.shape
+    print ("blob.shape", blob.shape)
     return blob
 
 

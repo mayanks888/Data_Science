@@ -13,7 +13,7 @@ def roi_pool(feature_map, rois, im_dims):
 	with tf.variable_scope('roi_pool'):
 		# image that the ROI is taken from 
 		box_ind         = tf.cast(rois[:,0], dtype=tf.int32) # 1-D tensor of shape [num_boxes]. The value of box_ind[i] specified the image that the i-th box refers to. 
-		print "box_ind", box_ind
+		print ("box_ind", box_ind)
 		# roi box coordinates (x1, y1, x2, y2). Must be normalized and orderd to [y1, x1, y2, x2 ]
 		boxes           = rois[:,1:]
 		normalization   = tf.cast( tf.stack( [im_dims[:,1], im_dims[:,0], im_dims[:,1], im_dims[:, 0]] , axis =1 ), dtype = tf.float32)

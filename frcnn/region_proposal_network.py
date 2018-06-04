@@ -130,12 +130,12 @@ class RegionProposalNetwork(object):
         rpn_outside_weights       = tf.transpose( rpn_outside_weights,[ 0, 2, 3, 1]) 
         
         diff                      = tf.multiply( rpn_inside_weights, rpn_bbox_pred - rpn_bbox_targets)
-        diff_sL1                  = smoothL1(diff,3.0)
+        diff_sL1                  = self.smoothL1(diff,3.0)
 
         rpn_bbox_reg              = 10*tf.reduce_sum(tf.multiply(tf.rpn_outside_weights, diff_sL1))
         return rpn_bbox_reg
 
-    def smoothL1( self, x, sigma):
+    def smoothL1(self, x, sigma):
         conditional               = tf.less(tf.abs(x), 1/sigma**2)
         close                     = 0.5* (sigma * 2 ) **2
         far                       = tf.abs(x) - 0.5/sigma ** 2

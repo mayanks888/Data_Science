@@ -29,7 +29,7 @@ class roi_proposal_layer(object):
 			# convert score to probablility
 			self.rpn_cls_prob = rpn_softmax.rpn_softmax(self.rpn_cls_score)
 			# determine the best proposal
-			self.blobs        = proposal_layer.proposal_layer( rpn_bbox_cls_prob = self.rpn_cls_prob, rpn_bbox_pred = self.rpn_bbox_pred, mode  = self.mode, 
+			self.blobs        = proposal_layer.rpn_label( rpn_bbox_cls_prob = self.rpn_cls_prob, rpn_bbox_pred = self.rpn_bbox_pred, mode  = self.mode, 
 				im_dims = self.im_dims, feat_strides = self.rpn_net.feat_stride, anchor_scales = self.anchor_scales)
 
 			if self.mode == 'train':
