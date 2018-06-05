@@ -63,7 +63,7 @@ class DataHandler(object):
 
         batch_size = end - start
         data = np.zeros((batch_size, HEIGHT, WIDTH, CHANNEL), dtype=np.float32)
-        # labels               = np.zeros( (0, label_dimension       ), dtype = np.float32 )
+        #labels               = np.zeros( (0, label_dimension       ), dtype = np.float32 )
         # label = []
         labels = []
         im_dims = np.zeros((batch_size, 2), dtype=np.int64)

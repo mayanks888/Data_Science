@@ -52,6 +52,9 @@ class RegionProposalNetwork(object):
             self.rpn_reg_pred  = tf.nn.conv2d(feat, self.weights['w_rpn_bbox_pred'], strides = [1, 1, 1, 1], padding = 'SAME')
        
         # Anchor Target Layer ( anchor and delta )
+        # rpn_bbox_inside_weights(Nbox) and rpn_bbox_outside_weights(iLcls) is normalisation factor for classification and regression boxes
+        # LL({pi}, {ti}) = Lcls + Lbox = 1 Ncls∑iLcls(pi, p∗i)+λNbox∑ip∗i⋅Lsmooth1(ti−t∗i)
+
         with tf.variable_scope('anchor'):
             if self.mode == 'train':
                 self.rpn_labels, self.rpn_bbox_targets, self.rpn_bbox_inside_weights, self.rpn_bbox_outside_weights = \
