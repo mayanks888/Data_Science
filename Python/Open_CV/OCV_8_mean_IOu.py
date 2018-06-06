@@ -14,8 +14,8 @@ def bb_intersection_over_union(boxA, boxB):
     yB = min(boxA[3], boxB[3])
 
     # compute the area of intersection rectangle
-    interArea = (xB - xA) * (yB - yA)
-
+    # interArea = (xB - xA) * (yB - yA)
+    interArea = max((xB - xA), 0) * max((yB - yA), 0)
     # compute the area of both the prediction and ground-truth
     # rectangles
     boxAArea = (boxA[2] - boxA[0]) * (boxA[3] - boxA[1])
@@ -33,11 +33,14 @@ def bb_intersection_over_union(boxA, boxB):
 
 
 
-ground=[64,57,190,119]
-predicted=[64,57,190,119]
-# predicted=[80,60,200,158]
-ground=np.array(ground)
-predicted=np.array(predicted)
-print(bb_intersection_over_union(predicted,ground))
+# ground=[106,118,942,570]
+# # ground=[316,59,578,226]
+# predicted=[784,504,931,599]
+#
+#
+# # predicted=[80,60,200,158]
+# ground=np.array(ground)
+# predicted=np.array(predicted)
+# print(bb_intersection_over_union(predicted,ground))
 
 # print(tf.metrics.mean_iou(labels=ground,predictions=predicted,num_classes=1))

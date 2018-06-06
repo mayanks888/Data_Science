@@ -101,7 +101,7 @@ def anchor_target_layer_python(rpn_cls_score, gt_boxes, im_dims, feat_strides, a
 	labels.fill(-1)
 
 	# overlap between the anchors and the gt boxes
-	overlaps=box_overlap(anchorbb=anchors,groundbb=gt_boxes)
+	overlaps=box_overlap(anchorbb=anchors,groundbb=gt_boxes[0])
 	# # overlaps                   = bbox_overlaps.bbox_overlaps(
 	# # 						     np.ascontiguousarray(anchors, dtype = np.float),
 	# # 						     np.ascontiguousarray(gt_boxes, dtype = np.float)
@@ -109,11 +109,12 @@ def anchor_target_layer_python(rpn_cls_score, gt_boxes, im_dims, feat_strides, a
 
 
 	argmax_overlaps            = overlaps.argmax(axis = 1 ) # for each anchor( for each row), find its max overlap gt box index among all the gt_boxes 
-	max_overlaps               = overlaps[ np.arange( len(inds_inside) ), argmax_overlaps] # [ Finds_inside, 1], return the max_overlap area for each anchor	
+	#max_overlaps:this is to find the maximum iou of every anchor so that anchor with iou >0.5 can ve selected
+	max_overlaps               = overlaps[ np.arange( len(inds_inside) ), argmax_overlaps] # [ Finds_inside, 1], return the max_overlap area for each anchor
 	gt_argmax_overlaps         = overlaps.argmax(axis = 0) # for each gt_box, find its max overlap against all the anchors, it return the anchor index
-	gt_max_overlaps            = overlaps[ gt_argmax_overlaps, np.arange(overlaps.shape[1])] # for each ground truth, return it maximum overlap     
-	#pick all the anchor for which gt iou  value was maximum rather than just one anchor but all anchor with maximum value
-	gt_argmax_overlaps         = np.where(overlaps == gt_max_overlaps)[0]					 # return all the anchors index which has maximun overlap
+	gt_max_overlaps            = overlaps[ gt_argmax_overlaps, np.arange(overlaps.shape[1])] # for each ground truth, return it maximum overlap
+	#Definetely need to work on this
+	#gt_argmax_overlaps         = np.where(overlaps == gt_max_overlaps[:2])[0]					 # return all the anchors index which has maximun overlap
 
 	# set fg and bg label for each anchor in anchors
 
@@ -121,9 +122,9 @@ def anchor_target_layer_python(rpn_cls_score, gt_boxes, im_dims, feat_strides, a
 	# set labels of those anchor which max_overlaps < 0.3
 	labels[gt_argmax_overlaps] = 1
 	# for each gt, set anchor with highest overlap to 1
-	labels[max_overlaps > 0.7] = 1
+	labels[max_overlaps > 0.6] = 1
 	# set labels of those anchor which max_overlaps < 0.3
-
+	#total_positive_anchor=len(labels[label==1])#total positive anchors
 	# subsample positive labels if there are too many
 	num_fg                     = int( 0.5 * 256 )
 	fg_inds                    = np.where(labels == 1)[0]
@@ -137,11 +138,16 @@ def anchor_target_layer_python(rpn_cls_score, gt_boxes, im_dims, feat_strides, a
 	if len(bg_inds) > num_bg:
 		disable_inds 		   = np.random.choice(bg_inds, size=(len(bg_inds) - num_bg), replace = False)
 		labels[disable_inds]   = -1
-
-
+#____________________________________________________________________________________
+   # this is done for my own understanding
+	new_ggbox=gt_boxes[0,:,:]
 	# bbox targets : the deltas (relative to anchors) that faster R-CNN should try to predict at each anchor
 	bbox_targets               = np.zeros( (len(inds_inside), 4), dtype = np.float32 )
-	bbox_targets               = compute_target( anchors, gt_boxes[argmax_overlaps,:])
+	bbox_targets               = compute_target( anchors, new_ggbox[argmax_overlaps,:])
+	#_______________________________________________________________________________
+	# bbox targets : the deltas (relative to anchors) that faster R-CNN should try to predict at each anchor
+#	bbox_targets               = np.zeros( (len(inds_inside), 4), dtype = np.float32 )
+#	bbox_targets               = compute_target( anchors, gt_boxes[argmax_overlaps,:])
 
 	# it is used for p*_{i} in cost function (equation 1): Inside weights is for specifying anchors or rois with positive labe
 	bbox_inside_weights        = np.zeros( (len(inds_inside), 4), dtype = np.float32 )
@@ -200,7 +206,7 @@ def unmap( data, count, inds, fill = 0):
 
 def compute_target(ex_rois, gt_rois):
 	"""Compute bounding-box regression targets for an image."""
-	assert ex_rois.shape[0] == gt_rois.shape[0]
+	assert ex_rois.shape[0] == gt_rois.shape[0]#assert is check condition
 	assert ex_rois.shape[1] == 4
 	assert gt_rois.shape[1] == 5
 
@@ -228,12 +234,22 @@ def find_iou(groundbb, predicted_bb):
 	xmaxofmin = np.minimum(data_ground[2], data_predicted[2])
 	ymaxofmin = np.minimum(data_ground[3], data_predicted[3])
 
-	interction = ((xmaxofmin - xminofmax + 1) * (ymaxofmin - yminofmax + 1))
+	# interction = ((xmaxofmin - xminofmax) * (ymaxofmin - yminofmax))
+
+	interction = max((xmaxofmin - xminofmax), 0) * max((ymaxofmin - yminofmax), 0)
+	#   i have added 1 to all the equation save the equation from giving 0 iou value
+	#    AOG: area of ground box
+	AOG = (np.abs(data_ground[0] - data_ground[2])) * (np.abs(data_ground[1] - data_ground[3]))
+	#AOP:area of predicted box
+	AOP = (np.abs(data_predicted[0] - data_predicted[2])) * (np.abs(data_predicted[1] - data_predicted[3]))
+
+
+	'''interction = ((xmaxofmin - xminofmax + 1) * (ymaxofmin - yminofmax + 1))
 	#   i have added 1 to all the equation save the equation from giving 0 iou value
 	#    AOG: area of ground box
 	AOG = (np.abs(data_ground[0] - data_ground[2]) + 1) * (np.abs(data_ground[1] - data_ground[3]) + 1)
 	#AOP:area of predicted box
-	AOP = (np.abs(data_predicted[0] - data_predicted[2]) + 1) * (np.abs(data_predicted[1] - data_predicted[3]) + 1)
+	AOP = (np.abs(data_predicted[0] - data_predicted[2]) + 1) * (np.abs(data_predicted[1] - data_predicted[3]) + 1)'''
 	union= (AOG + AOP) - interction
 	iou = (interction /union)
 	#mean_iou = np.mean(iou)

@@ -3,7 +3,7 @@ import tensorflow as tf
 import bbox_transform
 import generate_anchors 
 import cpu_nms
-# this is used while testing
+# this is used while testing and
 def proposal_layer(rpn_bbox_cls_prob, rpn_bbox_pred, im_dims, mode, feat_strides, anchor_scales):
     blob = tf.py_func(proposal_layer_py, [rpn_bbox_cls_prob, rpn_bbox_pred, im_dims, mode, feat_strides, anchor_scales], [tf.float32])
     return tf.reshape(blob, [-1, 5])

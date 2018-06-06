@@ -36,4 +36,4 @@ print(labels1, ims)
 rpn_label,rpn_bbox_targets,rpn_bbox_inside_weights,rpn_bbox_outside_weights=anchor_target_layer.anchor_target_layer_python(rpn_cls_score=data1,gt_boxes=labels1,im_dims=ims,feat_strides=feat_stride,anchor_scales=anchor_scale)
 (rpn_label)
 
-rpn_softmax.rpn_softmax(rpn_label)
+#rpn_softmax.rpn_soft

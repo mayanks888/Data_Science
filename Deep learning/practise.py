@@ -23,7 +23,7 @@ for data in pix_val:
     print (data)
     # mydata.append(data-255)
 print (mydata)'''
-
+import tensorflow as tf
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
@@ -46,3 +46,6 @@ plt.imshow(image_array, cmap='Greys', interpolation='None')
 plt.show()
 
 # @edited to check version
+
+
+tf.metrics.mean_iou
