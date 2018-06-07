@@ -78,7 +78,7 @@ init = tf.global_variables_initializer()
 
 sess=tf.Session()
 sess.run(init)
-# sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
+sess = tf_debug.TensorBoardDebugWrapperSession(sess, "localhost:7000")
 
 
 for i in range(epochs):

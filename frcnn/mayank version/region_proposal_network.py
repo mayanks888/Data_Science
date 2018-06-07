@@ -59,7 +59,8 @@ class RegionProposalNetwork(object):
             if self.mode == 'train':
                 self.rpn_labels, self.rpn_bbox_targets, self.rpn_bbox_inside_weights, self.rpn_bbox_outside_weights = \
                 anchor_target_layer.anchor_target_layer( self.rpn_cls_score, self.ground_truth, self.im_dims, self.feat_stride, self.anchor_scale )
-                
+
+
     def get_rpn_input_feature(self):
         return self.feat
 

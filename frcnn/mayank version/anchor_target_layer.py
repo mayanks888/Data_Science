@@ -43,11 +43,11 @@ def anchor_target_layer_python(rpn_cls_score, gt_boxes, im_dims, feat_strides, a
 	num_anchors                = anchors.shape[0]
 
 	# find the shape ( ..., H, W)
-	# height        			   = rpn_cls_score.shape[1]
-	# width         			   = rpn_cls_score.shape[2]
+	height        			   = rpn_cls_score.shape[1]
+	width         			   = rpn_cls_score.shape[2]
 
-	height = 40
-	width = 60
+	#height = 40
+	#width = 60
 
 
 	DEBUG = 1
@@ -122,12 +122,13 @@ def anchor_target_layer_python(rpn_cls_score, gt_boxes, im_dims, feat_strides, a
 	# set labels of those anchor which max_overlaps < 0.3
 	labels[gt_argmax_overlaps] = 1
 	# for each gt, set anchor with highest overlap to 1
-	labels[max_overlaps > 0.6] = 1
+	labels[max_overlaps > 0.5] = 1
 	# set labels of those anchor which max_overlaps < 0.3
 	#total_positive_anchor=len(labels[label==1])#total positive anchors
 	# subsample positive labels if there are too many
 	num_fg                     = int( 0.5 * 256 )
 	fg_inds                    = np.where(labels == 1)[0]
+	print('total frontground anchors were:', len(fg_inds))
 	if len(fg_inds ) > num_fg:
 		disable_inds           = np.random.choice( fg_inds, size=(len(fg_inds) - num_fg), replace = False )
 		labels[disable_inds]   = -1 # set it to don't care
@@ -135,6 +136,7 @@ def anchor_target_layer_python(rpn_cls_score, gt_boxes, im_dims, feat_strides, a
 	# subsample negative lables if there are too many
 	num_bg                     = 256 - np.sum(labels == 1)
 	bg_inds                    = np.where(labels == 0)[0]
+	print('total background anchors were:', len(bg_inds))
 	if len(bg_inds) > num_bg:
 		disable_inds 		   = np.random.choice(bg_inds, size=(len(bg_inds) - num_bg), replace = False)
 		labels[disable_inds]   = -1
@@ -184,8 +186,11 @@ def anchor_target_layer_python(rpn_cls_score, gt_boxes, im_dims, feat_strides, a
 		print ("rpn_bbox_targets.shape", rpn_bbox_targets.shape)
 		print ("rpn_bbox_inside_weights.shape", rpn_bbox_inside_weights.shape)
 		print ("rpn_bbox_outside_weights.shape",rpn_bbox_outside_weights.shape)
+		# print(rpn_labels,rpn_bbox_targets,rpn_bbox_inside_weights,rpn_bbox_outside_weights)
+		print("mean wieght ",np.mean(rpn_bbox_inside_weights))
 
 	return rpn_labels,rpn_bbox_targets,rpn_bbox_inside_weights,rpn_bbox_outside_weights
+
 
 
 def unmap( data, count, inds, fill = 0):
@@ -217,7 +222,8 @@ def compute_target(ex_rois, gt_rois):
 def box_overlap(anchorbb,groundbb):
 	N=anchorbb.shape[0]
 	K=groundbb.shape[0]
-	overlap=np.zeros(shape=(N,K))
+  
+	overlap=np.zeros(shape=(N,20))
 	for n in range(N):
 		for k in range(K):
 			final_iou=find_iou(groundbb[k],anchorbb[n])
