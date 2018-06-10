@@ -62,68 +62,98 @@ y_test = np_utils.to_categorical(label_test, 10)
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 32, kernel_size=5,padding=1)#this is nothing with(1=channel,layer=32,padding=1 =same size of input)
-        self.conv2 = nn.Conv2d(32, 64, kernel_size=5,padding=1)
+        self.conv1 = nn.Conv2d(1, 32, kernel_size=5,padding=2)#this is nothing with(1=channel,layer=32,padding=1 =same size of input)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=5,padding=2)
         self.mp = nn.MaxPool2d(2)
-        self.fc = nn.Linear(1600, 10)
+        self.fc = nn.Linear(3136, 10)
 
     def forward(self, x):
         in_size = x.size(0)
-        x = x.float()
+        # x = x.float()
         first_layer=self.conv1(x)
         x = F.relu(self.mp(first_layer))
         x = F.relu(self.mp(self.conv2(x)))
         x = x.view(in_size, -1)  # flatten the tensor
         x = self.fc(x)
-        # prob=torch.nn.Softmax(x)
+        # prob=nn.Softmax(x)
+        # print(prob.data[0])
         prob=F.log_softmax(x)
         # prob=prob.long()
         return prob
 
 
 model = Net()
-criterea = nn.CrossEntropyLoss()
+# model.cuda()
+model = model.double()
+criterea = torch.nn.CrossEntropyLoss()#this include softmax and cross entropy
 # criterea=torch.nn.MSELoss(size_average=False)#cross entropy loss
 optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
 
 
 
-
+run=0
 epochs=10
 for loop in range(epochs):
     # ______________________________________________________________________
     # my batch creater
     # Construct an array data source
-    ds = data_source.ArrayDataSource([scaled_input, y_train])
+    ds = data_source.ArrayDataSource([scaled_input, y])
     # Iterate over samples, drawing batches of 64 elements in random order
-    for (data, target) in ds.batch_iterator(batch_size=64, shuffle=True):#shuffle true will randomise every batch
+    for (data, target) in ds.batch_iterator(batch_size=100, shuffle=True):#shuffle true will randomise every batch
         new_data=data.reshape(-1,1,28,28)
         cool_data=new_data[0]
         # cv2.imshow("image",np.reshape(cool_data,newshape=(28,28,1)))
         # cv2.waitKey(500)
         # cv2.destroyAllWindows()
         # data, target=torch.from_numpy(new_data).double(),torch.from_numpy(target).double()
+        # inputs, labels = Variable(inputs.cuda()), Variable(labels.cuda())#this is for cuda gpu
         data, target = torch.tensor(new_data), torch.tensor(target).long()
-        # target=target.long()
-        
-        # data, target = Variable(data), Variable(target)
         optimizer.zero_grad()
         output = model(data)
-        # loss = F.nll_loss(output, target)
-        loss = criterea(output[0], target[0])
+        out=torch.max(output, 1)[1]
+        match=torch.eq(out, target.squeeze())
+        all1=torch.sum(match)
+        acc=all1.item()/len(match)
+
+        #  _, predicted = torch.max(target.data, 1)
+        # total += labels.size(0)
+        # correct += (predicted == target).sum().item()
+        # print('Accuracy of the network on the 10000 test images: %d %%' % (100 * correct / total))
+        #
+        loss = F.nll_loss(output, target.squeeze())                               
+        #loss = criterea(output,torch.max(target, 1)[0])#max returns two values it means its return max value in each row and[0 ] means its take first return value
+        #loss = criterea(output, target.squeeze())
         loss.backward()
         optimizer.step()
-        if loop % 10 == 0:
-            print('epoch is', loop)
-            print('loss is',loss.data[0])
+        run+=1 
 
+        print('epoch is', run)
+        print('train loss is',loss.item())
+        print("train  accuracy is ",acc)
 
+        if run % 10 == 0:
+            ds = data_source.ArrayDataSource([scaled_test, label_test])
+                    # Iterate over samples, drawing batches of 64 elements in random order
+            for (test_data, test_target) in ds.batch_iterator(batch_size=100,shuffle=True):  # shuffle true will randomise every batch
+                test_data=test_data.reshape(-1,1,28,28)
+                cv2.imshow("image",np.reshape(test_data[5],newshape=(28,28,1)))
+                cv2.waitKey(500)
+                cv2.destroyAllWindows()
+                test_data1, target = torch.tensor(test_data), torch.tensor(test_target).long()
+
+                optimizer.zero_grad()
+                output = model(test_data1)
+                out=torch.max(output, 1)[1]
+                match=torch.eq(out, target.squeeze())
+                all1=torch.sum(match)
+                acc=all1.item()/len(match)
+                print("test accuracy is ",acc)
+                break
             # print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
             #     loop, batch_idx * len(data), len(train_loader.dataset),
             #            100. * batch_idx / len(train_loader), loss.data[0]))
 
-        # _,accuracy=sess.run([train,acc], feed_dict={x: batch_X, y_true: batch_y, hold_prob: 0.5})
-        # print("the train accuracy is:", accuracy)
+        
          # ________________________________________________________________________
 
     # batch_x1, batch_y1 = tf.train.batch([feature_input, y_train], batch_size=50)
@@ -142,56 +172,3 @@ for loop in range(epochs):
     #
     #
 
-
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-# ### Placeholders
-"""x = tf.placeholder(tf.float32,shape=[None,784])
-y_true = tf.placeholder(tf.float32,shape=[None,10])
-# ### Layers
-x_image = tf.reshape(x,[-1,28,28,1])
-
-conv_1_layer = tf.keras.layers.Conv2D(filters=32,kernel_size=(6, 6),strides=(1, 1), activation='relu', padding='same', name='block1_conv1')(x_image)
-max_pool_1 = tf.keras.layers.MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool')(conv_1_layer)
-
-conv_2_layer = tf.keras.layers.Conv2D(filters=64,kernel_size=(6, 6),strides=(1, 1), activation='relu', padding='same', name='block2_conv1')(max_pool_1)
-max_pool_2 = tf.keras.layers.MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool')(conv_2_layer)
-
-flat_layer=tf.keras.layers.Flatten(name='flatten')(max_pool_2)
-
-first_dense=tf.keras.layers.Dense(1024, activation="relu",name="flat1")(flat_layer)
-
-hold_prob = tf.placeholder(tf.float32)#this made to pass the user defined value for dropout probabilty you could have also used contant value
-full_one_dropout = tf.nn.dropout(first_dense,keep_prob=hold_prob)
-
-output_layer =tf.keras.layers.Dense(10, activation='relu', name='output1')(full_one_dropout)
-# _______________________________________________________
-
-# first method
-softmax_output=tf.nn.softmax(logits=output_layer)
-entropy_loss_per_row=(y_true * tf.log(softmax_output))#formula for cross entropy
-# formula for cross entropy (L=−∑i=0kyilnp^i)
-sum_loss_per_row = (-tf.reduce_sum(entropy_loss_per_row,axis=1))#"-" you have to check(axis=1 since I was row wise sum)
-# loss_per_row = (-tf.reduce_sum(y_true * tf.log(softmax_output),[1]))#formula for cross entropy
-cross_entropy_mean=tf.reduce_mean(sum_loss_per_row)
-# -------------------------------------------------------------------------------
-# Second method(direct)
-# cross_entropy_mean = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_true,logits=y_pred))
-# -------------------------------------------------------------------------------
-# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-# optimisation: this is to learning check differnt optimiser
-optimizer = tf.train.AdamOptimizer(learning_rate=0.0001)#Inistising your optimising functions
-train = optimizer.minimize(cross_entropy_mean)#this will trigger backward propogation for learning
-# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-train_matches = tf.equal(tf.argmax(output_layer, 1), tf.argmax(y_true, 1))
-acc = tf.reduce_mean(tf.cast(train_matches, tf.float32))
-
-    # _____
-
-
-# intialiasing all variable
-
-init=tf.global_variables_initializer()"""
