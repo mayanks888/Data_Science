@@ -110,6 +110,8 @@ for loop in range(epochs):
         data, target = torch.tensor(new_data), torch.tensor(target).long()
         optimizer.zero_grad()
         output = model(data)
+
+        #this is to find accuracy
         out=torch.max(output, 1)[1]
         match=torch.eq(out, target.squeeze())
         all1=torch.sum(match)
@@ -136,13 +138,14 @@ for loop in range(epochs):
                     # Iterate over samples, drawing batches of 64 elements in random order
             for (test_data, test_target) in ds.batch_iterator(batch_size=100,shuffle=True):  # shuffle true will randomise every batch
                 test_data=test_data.reshape(-1,1,28,28)
-                cv2.imshow("image",np.reshape(test_data[5],newshape=(28,28,1)))
-                cv2.waitKey(500)
-                cv2.destroyAllWindows()
+                # cv2.imshow("image",np.reshape(test_data[5],newshape=(28,28,1)))
+                # cv2.waitKey(500)
+                # cv2.destroyAllWindows()
                 test_data1, target = torch.tensor(test_data), torch.tensor(test_target).long()
 
                 optimizer.zero_grad()
                 output = model(test_data1)
+
                 out=torch.max(output, 1)[1]
                 match=torch.eq(out, target.squeeze())
                 all1=torch.sum(match)
