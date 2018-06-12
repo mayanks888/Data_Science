@@ -29,9 +29,10 @@ def py_cpu_nms(roi, thresh=0.7, score=None):
         order = np.arange(roi.shape[0])
     else:               # roi are not sorted
         order = score.argsort()[::-1]
-
+    loop=0
     keep = []
     while order.size > 0:
+        loop=loop+1
         i = order[0]
         keep.append(i)
         xx1 = np.maximum(x1[i], x1[order[1:]])
@@ -46,7 +47,8 @@ def py_cpu_nms(roi, thresh=0.7, score=None):
 
         inds = np.where(iou <= thresh)[0]
         order = order[inds + 1]
-
+        
+    print(loop)
     return keep # list of index of kept roi
 
 

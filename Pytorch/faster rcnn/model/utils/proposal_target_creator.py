@@ -1,6 +1,8 @@
 import numpy as np
-from model.utils.bbox_tools import bbox_iou
-from model.utils.bbox_tools import bbox2delta
+from utils.bbox_tools import bbox_iou
+from utils.bbox_tools import bbox2delta
+# from model.utils.bbox_tools import bbox_iou
+# from model.utils.bbox_tools import bbox2delta
 
 class ProposalTargetCreator(object):
     """
@@ -42,9 +44,9 @@ class ProposalTargetCreator(object):
         #---------- debug
 
         # concate gt_bbox as part of roi to be chose
-        roi = np.concatenate((roi, gt_bbox), axis=0)   
+        roi = np.concatenate((roi, gt_bbox), axis=0)  #nixe techinqe to use ground t bounding box for your proper training 
 
-        n_pos = int(self.n_sample * self.pos_ratio)
+        n_pos = int(self.n_sample * self.pos_ratio)#meaning 25% positive and 75% negative samples needed
 
         iou = bbox_iou(roi, gt_bbox)
         bbox_index_for_roi = iou.argmax(axis=1)
@@ -52,6 +54,7 @@ class ProposalTargetCreator(object):
 
         # note that bbox_bg_label_for_roi include background, class 0 stand for backdround
         # object class change from 0 ~ n_class-1 to 1 ~ n_class
+        #this is really important as it give the real gt box label to the roi now
         bbox_bg_label_for_roi = gt_bbox_label[bbox_index_for_roi] + 1
         
         # Select foreground(positive) RoIs as those with >= pos_iou_thresh IoU.
@@ -78,6 +81,13 @@ class ProposalTargetCreator(object):
         return sample_roi, target_delta_for_sample_roi, bbox_bg_label_for_sample_roi
 
 if __name__ == '__main__':
+    
+    
+    
+    
+    
+    
+    
     proposal_target_creator = ProposalTargetCreator()
     roi = np.random.randn(2000,4) + [0,0,3,3]
     gt_bbox = np.random.randn(10, 4) + [0,0,3,3]

@@ -1,7 +1,10 @@
 import numpy as np
-from model.utils.bbox_tools import delta2bbox
-from model.utils.nms_cpu import py_cpu_nms as nms
-from model.utils.anchor_target_creator import AnchorTargetCreator
+from bbox_tools import delta2bbox
+from nms_cpu import py_cpu_nms as nms
+from anchor_target_creator import AnchorTargetCreator
+#from model.utils.bbox_tools import delta2bbox
+#from model.utils.nms_cpu import py_cpu_nms as nms
+#from model.utils.anchor_target_creator import AnchorTargetCreator
 
 class ProposalCreator(object):
     """
@@ -40,8 +43,8 @@ class ProposalCreator(object):
             n_post_nms = self.n_test_post_nms
         
         # 1. clip the roi into the size of image
-        roi = delta2bbox(anchor, delta)
-        roi[:,slice(0,4,2)] = np.clip(roi[:,slice(0,4,2)], a_min=0, a_max=image_size[0])
+        roi = delta2bbox(anchor, delta)#i have a converted my delta back to original proposal
+        roi[:,slice(0,4,2)] = np.clip(roi[:,slice(0,4,2)], a_min=0, a_max=image_size[0])#slicing to fit the box into the picture
         roi[:,slice(1,4,2)] = np.clip(roi[:,slice(1,4,2)], a_min=0, a_max=image_size[1])
         
         # 2. remove roi where H or W is less than min_roi_size
@@ -62,12 +65,12 @@ class ProposalCreator(object):
         keep = keep[:n_post_nms]
         roi = roi[keep,:]
 
-        return roi
+        return roi#this is returning real bounding box value and not delta values
 
 
 if __name__ == '__main__':
     proposal_creater = ProposalCreator()
-    from model.utils.generate_anchor import generate_anchor
+    from generate_anchor import generate_anchor
     anchor = generate_anchor(50,50,(600,800))   # (22500, 4)
     delta = np.random.randn(22500,4)
     score = np.random.randn(22500)

@@ -5,10 +5,15 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 import numpy as np
 
-from model.utils.roipooling import RoIPool
-from model.utils.loss import delta_loss
-from model.utils.bbox_tools import delta2bbox
-from model.utils.nms_cpu import py_cpu_nms
+from utils.roipooling import RoIPool
+from utils.loss import delta_loss
+from utils.bbox_tools import delta2bbox
+from utils.nms_cpu import py_cpu_nms
+
+# from model.utils.roipooling import RoIPool
+# from model.utils.loss import delta_loss
+# from model.utils.bbox_tools import delta2bbox
+# from model.utils.nms_cpu import py_cpu_nms
 
 def get_vgg16_extractor_and_head(n_class, roip_size=7, vgg_pretrained=False):
     vgg16_net = vgg16(pretrained=True)
@@ -207,7 +212,7 @@ def _get_resnet50_extractor_and_head():
 
 
 if __name__ == '__main__':
-    from model.utils.proposal_target_creator import ProposalTargetCreator
+    from utils.proposal_target_creator import ProposalTargetCreator
     extractor, head, output_feature_channel = get_vgg16_extractor_and_head(20, 7)    
     features = Variable(torch.randn(1,512,50,50))
     if torch.cuda.is_available():
@@ -222,7 +227,7 @@ if __name__ == '__main__':
     
     delta_per_class, score = head.forward(features, sample_roi, image_size=(500,500))
     loss = head.loss(score, delta_per_class,target_delta_for_sample_roi,bbox_bg_label_for_sample_roi)
-    print(loss)
+    print('my loss',loss)
     loss.backward()
 
     rois = (np.random.rand(300,4)+[0,0,1,1])*240
