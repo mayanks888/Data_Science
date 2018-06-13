@@ -50,7 +50,7 @@ test_datagen = ImageDataGenerator(rescale=1./255)
                                                     target_size=(64, 64),
                                                     batch_size=32,
                                                     class_mode='binary')'''
-training_data = train_datagen.flow_from_directory(directory="../../../Datasets/cat_dogs/train",
+training_data = train_datagen.flow_from_directory(directory="../../../../Datasets/cat_dogs/train",
                                                     target_size=(64, 64),
                                                     batch_size=32,
                                                     class_mode='binary')
@@ -60,7 +60,7 @@ training_data = train_datagen.flow_from_directory(directory="../../../Datasets/c
                                                         target_size=(64, 64),
                                                         batch_size=32,
                                                         class_mode='binary')'''
-test_validation = test_datagen.flow_from_directory("../../../Datasets/cat_dogs/test",
+test_validation = test_datagen.flow_from_directory("../../../../Datasets/cat_dogs/test",
                                                         target_size=(64, 64),
                                                         batch_size=32,
                                                         class_mode='binary')
@@ -85,7 +85,7 @@ from keras.preprocessing import image
 
 # test_image=image.load_img(path="C:/Users/mayank/Documents/Datasets/Cat_dogs/test1/509.jpg",target_size=(64,64))
 #linux path
-test_image=image.load_img(path="../../../Datasets/cat_dogs/test1/2.jpg",target_size=(64,64))
+test_image=image.load_img(path="../../Datasets/cat_dogs/test1/2.jpg",target_size=(64,64))
 test_image=image.img_to_array(test_image)
 test_image=np.expand_dims(test_image,axis=0)
 result=myclassifier.predict(test_image)
