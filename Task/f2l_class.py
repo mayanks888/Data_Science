@@ -124,8 +124,8 @@ print("Start Video to Frames Converter...","\n")
 
 
 parser = argparse.ArgumentParser(description="Video to Frames converter")
-parser.add_argument('input', metavar='<input_video_file>', help="Input video file")
-parser.add_argument('output', metavar='<output_folder>', help="Output folder. If exists it will be removed")
+parser.add_argument('input', metavar='<input_video_folder>', help="Input video folder")
+parser.add_argument('output', metavar='<output_folder>', help="Output folder")
 parser.add_argument('--maxframes', type=int, help="Output max number of frames")
 args = parser.parse_args()
 
