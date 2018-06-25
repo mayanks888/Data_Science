@@ -1,8 +1,9 @@
 import numpy as np
-# from model.utils.bbox_tools import bbox_iou
-# from model.utils.bbox_tools import bbox2delta
-from bbox_tools import bbox_iou
-from bbox_tools import bbox2delta
+from model.utils.bbox_tools import bbox_iou
+from model.utils.bbox_tools import bbox2delta
+# from bbox_tools import bbox_iou
+# from bbox_tools import bbox2delta
+
 class AnchorTargetCreator(object):
     """
     This class will be used only in training phase to build rpn's loss function.

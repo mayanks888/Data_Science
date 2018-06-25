@@ -43,7 +43,7 @@ class RPN(nn.Module):
 
 
 model = RPN()
-optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
+# optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
 
 
 data_image=read_pascal_voc.prepareBatch(0,1,imageNameFile,vocPath)
@@ -72,8 +72,8 @@ total_loss=model.find_loss(pred_reg_delta, pred_score, anchor, gt_bbox, image_si
 print(total_loss)
 
 total_loss.backward()
-optimizer.zero_grad()
-# total_loss.backward()
-optimizer.step()
+# optimizer.zero_grad()
+# # total_loss.backward()
+# optimizer.step()
 
 #rpn_labels,rpn_bbox_targets,rpn_bbox_inside_weights,rpn_bbox_outside_weights=anchor_target_layer.anchor_target_layer_python(output, gt_bbox, image_siz, feat_stride, anchor_scale)
