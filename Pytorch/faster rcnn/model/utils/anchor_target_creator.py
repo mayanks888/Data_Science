@@ -1,8 +1,8 @@
 import numpy as np
-from model.utils.bbox_tools import bbox_iou
-from model.utils.bbox_tools import bbox2delta
-# from bbox_tools import bbox_iou
-# from bbox_tools import bbox2delta
+#from model.utils.bbox_tools import bbox_iou
+#from model.utils.bbox_tools import bbox2delta
+from bbox_tools import bbox_iou
+from bbox_tools import bbox2delta
 
 class AnchorTargetCreator(object):
     """
@@ -25,8 +25,8 @@ class AnchorTargetCreator(object):
 
 
     def make_anchor_target(self, anchor, gt_bbox, image_size):
-        gt_bbox=gt_bbox[0]
-        gt_bbox=gt_bbox[::,0:4]
+        #gt_bbox=gt_bbox[0]
+        #gt_bbox=gt_bbox[::,0:4]
         
         """
         Assign ground truth supervision to sampled subset of anchors.
@@ -51,7 +51,7 @@ class AnchorTargetCreator(object):
             (anchor[:, 1] >= 0) &
             (anchor[:, 2] <= img_H) &
             (anchor[:, 3] <= img_W))[0]
-
+            #anchor coordinate are in a shape of (xcentre,ycentre,width,height)
         anchor = anchor[index_inside_image] # rule out anchors that are not fully included inside the image
 
         bbox_index_for_anchor, anchor_label = self._assign_targer_and_label_for_anchor(anchor, gt_bbox)

@@ -51,7 +51,7 @@ class rpn(nn.Module):
         score = self.score_layer(mid_features)
         score = score.permute(0,2,3,1).contiguous().view([feature_height*feature_width*self.K, 2])
 
-        # ndarray: (feature_height*feature_width*K, 4)
+        # ndarray: (feature_height*feature_width*K, 4)self.training
         anchor = generate_anchor(feature_height, feature_width, image_size, self.ratio, self.anchor_size)
         #---------- debug
         assert isinstance(delta, Variable) and isinstance(score, Variable) and isinstance(anchor, np.ndarray)

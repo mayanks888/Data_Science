@@ -1,8 +1,8 @@
 import numpy as np
-# from utils.bbox_tools import bbox_iou
-# from utils.bbox_tools import bbox2delta
-from model.utils.bbox_tools import bbox_iou
-from model.utils.bbox_tools import bbox2delta
+from bbox_tools import bbox_iou
+from bbox_tools import bbox2delta
+#from model.utils.bbox_tools import bbox_iou
+#from model.utils.bbox_tools import bbox2delta
 
 class ProposalTargetCreator(object):
     """
@@ -44,7 +44,7 @@ class ProposalTargetCreator(object):
         #---------- debug
 
         # concate gt_bbox as part of roi to be chose
-        roi = np.concatenate((roi, gt_bbox), axis=0)  #nixe techinqe to use ground t bounding box for your proper training 
+        roi = np.concatenate((roi, gt_bbox), axis=0)  #nice techinqe to use ground t bounding box for your proper training 
 
         n_pos = int(self.n_sample * self.pos_ratio)#meaning 25% positive and 75% negative samples needed
 
