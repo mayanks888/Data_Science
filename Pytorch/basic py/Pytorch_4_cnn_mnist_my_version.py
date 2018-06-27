@@ -17,11 +17,11 @@ from torchvision import datasets, transforms
 from torch.autograd import Variable
 
 # ___________________
-data=pd.read_csv('../../Datasets/MNIST_data/train_image.csv')
-label=pd.read_csv('../../Datasets/MNIST_data/train_label.csv')
+data=pd.read_csv('../../../Datasets/MNIST_data/train_image.csv')
+label=pd.read_csv('../../../Datasets/MNIST_data/train_label.csv')
 
-test_feature=pd.read_csv('../../Datasets/MNIST_data/test_image.csv')
-test_label=pd.read_csv('../../Datasets/MNIST_data/test_label.csv')
+test_feature=pd.read_csv('../../../Datasets/MNIST_data/test_image.csv')
+test_label=pd.read_csv('../../../Datasets/MNIST_data/test_label.csv')
 
 
 
