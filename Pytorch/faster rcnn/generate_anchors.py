@@ -11,7 +11,7 @@ import numpy as np
 #
 #    >> load output/rpn_cachedir/faster_rcnn_VOC2007_ZF_stage1_rpn/anchors.mat
 #    >> anchors
-#
+#Detectron
 #    anchors =
 #
 #       -83   -39   100    56
@@ -96,10 +96,10 @@ def _scale_enum(anchor, scales):
     anchors            = _mkanchors(ws, hs, x_ctr, y_ctr)
     return anchors
 
-#if __name__ == '__main__':
-#    import time
-#    t = time.time()
-#    a = generate_anchors()
-#    print(time.time() - t)
-#    print(a)
+if __name__ == '__main__':
+   import time
+   t = time.time()
+   a = generate_anchors()
+   print(time.time() - t)
+   print(a)
  
