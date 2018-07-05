@@ -8,7 +8,7 @@ import scipy
 import random
 
 
-vocPath = os.path.abspath(os.path.join(oos.path.pardir,'dataset'))
+vocPath = os.path.abspath(os.path.join(os.path.pardir,'dataset'))
 os.getcwd(),
 class objInfo():
     """
