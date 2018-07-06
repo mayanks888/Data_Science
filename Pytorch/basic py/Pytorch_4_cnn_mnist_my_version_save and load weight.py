@@ -102,6 +102,7 @@ class Net(nn.Module):
         first_layer=self.conv1(x)
         x = F.relu(self.mp(first_layer))
         x = F.relu(self.mp(self.conv2(x)))
+
         x = x.view(in_size, -1)  # flatten the tensor
         x = self.fc(x)
         # prob=nn.Softmax(x)
