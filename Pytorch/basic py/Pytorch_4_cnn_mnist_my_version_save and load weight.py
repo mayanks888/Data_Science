@@ -116,6 +116,7 @@ model = Net()
 ##############################################
 # #this is for loading model saved parameter you dont need it while training or  you can resume you training with this
 # #model = torch.load(PATH + str(7))
+#2nd method
 # state = torch.load(PATH + str(2))
 # model.load_state_dict(state['state_dict'])
 #
