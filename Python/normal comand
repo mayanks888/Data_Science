@@ -58,6 +58,7 @@ model.fit(...)
 ------------------------------------------------------------------------------------------------------------------------
 
 tensorboard:
+use this :tensorboard --logdir="/home/mayank-s/PycharmProjects/models/aptive task/models/research/training"
 
 tensorboard --logdir=./Home/PycharmProjects/output_graph/
 

@@ -24,3 +24,4 @@ source ~/Tensorflow/bin/activate
 source ~/Aptiv/bin/activate
 
 export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+python3 train.py --logtostderr --train_dir training/ --pipeline_config_path  training/ssd_mobilenet_v2_coco.config
