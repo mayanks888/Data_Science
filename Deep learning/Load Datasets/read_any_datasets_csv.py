@@ -23,7 +23,7 @@ loop=0
 for name,group in (grouped):
     loop+=1
     print (name)
-    # image_name.append(name)
+    image_name.append(name)
     # print (group)
     # print(group.iloc[0])
     # print (group.values)
@@ -35,7 +35,7 @@ for name,group in (grouped):
     print(image_name)
     print (bbox)
     print(label)
-    if loop>500:
+    if loop>4000:
         break
 
 

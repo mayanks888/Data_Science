@@ -3,7 +3,7 @@ import numpy as np
 color_image=cv2.imread('mercedes.jpg')
 # '________________________________________________'
 # cv2.namedWindow("cool",cv2.WINDOW_NORMAL)
-'''cv2.imshow('car',color_image)
+cv2.imshow('car',color_image)
 
 height,widht,channel=color_image.shape#parsing shape of image
 b,g,r=cv2.split(color_image)#spliting imageinto rgb format
@@ -30,7 +30,7 @@ g=color_image[:,:,2]
 
 rbga_image=cv2.merge([b,g,r,g])
 cv2.imwrite('output_merccedes.png',rbga_image)
-cv2.imshow('rbga',rbga_image)'''
+cv2.imshow('rbga',rbga_image)
 
 # '_______________________________________'
 # scaling image
