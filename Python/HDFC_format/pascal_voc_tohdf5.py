@@ -17,7 +17,7 @@ import numpy as np
 sets_from_2007 = [('2007', 'train'), ('2007', 'val')]
 train_set = [('2012', 'train')]
 val_set = [('2012', 'val')]
-test_set = [('2007', 'test')]
+test_set = [('2007', 'val')]
 # test_set = [('2012', 'test')]
 
 classes = [
@@ -168,8 +168,7 @@ def _main(args):
 
     # process all ids and add to datasets
     print('Processing Pascal VOC 2007 datasets for training set.')
-    last_2007 = add_to_dataset(voc_path, '2007', train_ids_2007, train_images,
-                               train_boxes)
+    last_2007 = add_to_dataset(voc_path, '2007', train_ids_2007, train_images,train_boxes)
     print('Processing Pascal VOC 2012 training set.')
     add_to_dataset(
         voc_path,
