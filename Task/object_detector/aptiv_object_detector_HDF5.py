@@ -82,7 +82,7 @@ class Object_detect():
 
 
 
-    def find_detection(self,input_file,output_folder):
+    def find_detection(self,input_file,output_folder=None):
         """Function to detect images in input folder and save annotated image in an output directory.
 
             Args:
@@ -96,22 +96,37 @@ class Object_detect():
         #     print("Input folder not found")
         #     return 1
 
-        if not os.path.exists(output_folder):
-            print("Output folder not present. Creating New folder...")
-            os.makedirs(output_folder)
+        # if not os.path.exists(output_folder):
+        #     print("Output folder not present. Creating New folder...")
+        #     os.makedirs(output_folder)
 
         # for root,_, filenames in os.walk(input_folder):
         #     if (len(filenames) == 0):
         #         print("Input folder is empty")
         #         return 1
-        my_data = h5py.File(input_file, 'r')
-        val = my_data.get('test')
-        image_data = val.get('images')
-            # cool=list(image_data)
-        image_return = np.array(image_data)
+        image_return=self.read_hdf5_file(input_file)
+        # ___________________________________________________#
+        # hdf5_output_path=os.path.join(output_folder,'output.hdf5')
+        hdf5_output_path=input_file
+        h5file = h5py.File(hdf5_output_path, 'r+')
+        uint8_dt = h5py.special_dtype(vlen=np.dtype('uint8'))  # variable length uint8
+        # vlen_int_dt = h5py.special_dtype(vlen=np.dtype(int))
+        # test_group = h5file.create_group('test')
+        test_group=h5file.get('test')
+        # cool=test_group.items()
+        # new=list(cool)
+        # if 'output_images' in new:
+        #     print ("hello")
+
+        # del [test_group['output_images']
+        # test_group['output_images'][:] = 0
+        # test_images = test_group.create_dataset(name='images', shape=(np.shape(image_return)[0],), dtype=uint8_dt)
+        test_images = test_group.require_dataset(name='output_images', shape=(len(image_return),), dtype=uint8_dt)
+        ######################################################
+        # ##
         time_start = time.time()
         dirpath = tempfile.mkdtemp()
-        file_nam = dirpath +"tmp.jpg"
+        temp_file = dirpath +"tmp.jpg"
         for val, image_val in enumerate(image_return):
                 #try:
                     print("Creating object detection for file ", '\n')
@@ -125,13 +140,13 @@ class Object_detect():
                     # ... do stuff with dirpath
                     # shutil.rmtree(dirpath)
 
-                    img.save(file_nam)
+                    img.save(temp_file)
                     # img.save("temp.jpg")
 
                     # # ______________________________________
                     #
                     # file_path = (os.path.join(root, filename))
-                    image = cv2.imread(file_nam, 1)
+                    image = cv2.imread(temp_file, 1)
                     image_expanded = np.expand_dims(image, axis=0)
 
 
@@ -156,6 +171,8 @@ class Object_detect():
                     # cv2.imshow('Object detector', image)
                     output_path = (os.path.join(output_folder, file_name))
                     cv2.imwrite(output_path, image)
+
+                    test_images[val] = self.get_image_for_id(output_path)
                     # Press any key to close the image
                     # cv2.waitKey(1000)
                     # Clean up
@@ -179,6 +196,28 @@ class Object_detect():
         print('\n',"Path for output annotated images :", output_folder)
             # print("Object Detected successfully !", '\n')
 
+    def read_hdf5_file(self,hdf5_path):
+        Read_h5 = h5py.File(hdf5_path, 'r')
+        image_data = np.array(Read_h5.get('test').get('input_images'))
+        Read_h5.close()
+        return image_data
+
+    def get_image_for_id(self,fname):
+        """Get image data as uint8 array for given image.
+        Parameters
+        ----------
+        path : path of image directory
+        -------
+        image_data : array of uint8
+            Compressed JPEG byte string represented as array of uint8.
+        """
+        # fname = os.path.join(path, image_id)
+        with open(fname, 'rb') as in_file:
+            data = in_file.read()
+        # Use of encoding based on: https://github.com/h5py/h5py/issues/745
+        return np.fromstring(data, dtype='uint8')
+
+
 
 def parse_args():
     """Parse input arguments."""
@@ -186,7 +225,7 @@ def parse_args():
     # parser.add_argument('--input_path', help="Input Folder")
     # parser.add_argument('--output_path', help="Output folder")
     parser.add_argument('--input_path', help="Input Folder",
-                        default='/home/mayank-s/Desktop/Link to Datasets/aptive/object_detect/Image_to_hdf5.hdf5')
+                        default='/home/mayank-s/Desktop/Link to Datasets/aptive/object_detect/Image_to_hdf51.hdf5')
     parser.add_argument('--output_path', help="Output folder",
                         default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect/output')
 
