@@ -75,7 +75,7 @@ if __name__ == '__main__':
     train_image_path='/home/mayank-s/PycharmProjects/Datasets/Berkely_DeepDrive/bdd100k/images/100k/train'
 
     print('Creating HDF5 dataset structure.')
-    fname = os.path.join(voc_path, 'My_developed_diff.hdf5')
+    fname = os.path.join(voc_path, 'My_developed_diff_practise.hdf5')
 
     csv_path=os.path.join(voc_path,train_csv_name)
     # reading train csv file

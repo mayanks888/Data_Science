@@ -32,10 +32,6 @@ class Hdf5_to_Image():
             return 1
         except:
             print("Unexpected error:")
-
-        #
-        # # at_item = my_data.attrs.values()#reading attributes
-        # print(list(at_item))
         try:
             dataset=file_data.get('test')
 
@@ -48,9 +44,9 @@ class Hdf5_to_Image():
                 raise IOError
 
             group_image=np.array(image_data)
-            # if str(group_image) is None:
-            if not group_image:
-                print("{it} is not present in hdf5 file".format(it=image_type))
+
+            if len(group_image.shape)==0:
+                print("{it} datasets is not present in hdf5 file".format(it=image_type))
                 raise IOError
 
             file_data.close()
@@ -84,9 +80,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Object detection on imgage started..')
     # parser.add_argument('--input_path', help="Input Folder")
     # parser.add_argument('--output_path', help="Output folder")
-    parser.add_argument('--hdf5_path', help="input hdf5_path",default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect/Image_to_hdf51 (copy).hdf5')
+    parser.add_argument('--hdf5_path', help="input hdf5_path",default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect/Run1.hdf5')
     parser.add_argument('--image_type', help="input_output_images",
-                        default='input')
+                        default='output')
     parser.add_argument('--output_path', help="Output folder",
                         default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect/output')
     args = parser.parse_args()

@@ -17,10 +17,10 @@ print('my rgb rgb_color[:,0:widht,:]',rgb_color[:,0:widht])
 rgb_color[:,widht:widht*2,:]=cv2.merge([g,g,g])
 rgb_color[:,widht*2:widht*3,:]=cv2.merge([r,r,r])
 # print(b)
-cv2.imshow('rgb',rgb_color)'''
+cv2.imshow('rgb',rgb_color)
 # ____________________________________________________
 # change into grey scale
-'''gray_scale=cv2.cvtColor(color_image,cv2.COLOR_RGB2GRAY)
+gray_scale=cv2.cvtColor(color_image,cv2.COLOR_RGB2GRAY)
 cv2.imshow('GRAy',gray_scale)
 
 #transparency layer
@@ -34,11 +34,11 @@ cv2.imshow('rbga',rbga_image)
 
 # '_______________________________________'
 # scaling image
-'''image_stretch=cv2.resize(color_image,dsize=(400,400))
+image_stretch=cv2.resize(color_image,dsize=(400,400))
 cv2.imshow('stretch',image_stretch)
 # scale with interpolation
 image_stretchwrt_interpol=cv2.resize(color_image,dsize=(400,400),interpolation=cv2.INTER_NEAREST)
-cv2.imshow('inter',image_stretchwrt_interpol)'''
+cv2.imshow('inter',image_stretchwrt_interpol)
 # '_______________________________________'
 #rotation
 m=cv2.getRotationMatrix2D(center=(0,0),angle=35,scale=1)#sccale is scalablity

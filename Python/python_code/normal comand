@@ -97,3 +97,12 @@ plt.title('Example: %d Label: %d' % (num, label))#to print properly
 #reading datasets
 1. windows
 ../../../../Datasets
+
+
+___________________________________________________________________________________________________--
+# object detection
+
+python3 eval.py  --logtostderr --checkpoint_dir=training1/ --eval_dir=training1/ --pipeline_config_path=training1/faster_rcnn_resnet50_coco.config
+
+python3 train.py --logtostderr --train_dir training/ --pipeline_config_path  training/faster_rcnn_resnet50_coco.config
+
