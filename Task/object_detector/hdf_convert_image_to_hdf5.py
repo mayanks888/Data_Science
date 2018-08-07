@@ -74,7 +74,7 @@ def parse_args():
     # parser.add_argument('--input_path', help="Input Folder")
     # parser.add_argument('--output_path', help="Output folder")
     parser.add_argument('--input_path', help="Input Folder",
-                        default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect/input')
+                        default='/home/mayank-s/PycharmProjects/Datasets/Berkely_DeepDrive/bdd100k/images/10k/val')
     parser.add_argument('--output_path', help="Output folder",
                         default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect')
     args = parser.parse_args()

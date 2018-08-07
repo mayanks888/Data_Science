@@ -23,7 +23,7 @@ class Hdf5_to_Image():
         if not os.path.exists(output_path):
             print("Output folder not present. Creating New folder...")
             os.makedirs(output_path)
-
+ # l
         print('Reading HDF5 dataset structure.')
         try:
             file_data=h5py.File(fname,'r')
@@ -63,6 +63,7 @@ class Hdf5_to_Image():
                 file_name="file_"+str(loop) +'.jpeg'
                 image_path=os.path.join(output_path, file_name)
                 img.save(image_path, 'JPEG')
+
                 # img.show()
 
             print("closing hdf5 file")
@@ -80,9 +81,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Object detection on imgage started..')
     # parser.add_argument('--input_path', help="Input Folder")
     # parser.add_argument('--output_path', help="Output folder")
-    parser.add_argument('--hdf5_path', help="input hdf5_path",default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect/Run1.hdf5')
+    parser.add_argument('--hdf5_path', help="input hdf5_path",default='/home/mayank-s/Desktop/Link to Datasets/aptive/object_detect/INPUT_02_08_2018_19_57_51.hdf5')
     parser.add_argument('--image_type', help="input_output_images",
-                        default='output')
+                        default='input')
     parser.add_argument('--output_path', help="Output folder",
                         default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect/output')
     args = parser.parse_args()
