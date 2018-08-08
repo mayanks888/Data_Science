@@ -35,11 +35,20 @@ print(len(stop_punt))
 #removel all english common word from corpus (not recommended)
 print([w.lower() for w in my_sent[4] if w not in stop_punt])
 print(my_sent)
+*********************************************************88
+proper way to convert into lower sentenses
+lower_sent=[]
+for sent in my_sent:
+    my_sent1 = [w.lower() for w in sent]
+    lower_sent.append(my_sent1)
+
+print(lower_sent[5])
+**************************************************************
 
 
 #3 practise remover all plural and sigular same (son, sons, chair,chairs(not recommended)
 stemmer = PorterStemmer()
-[stemmer.stem(w.lower()) for w in my_sent[4] if w not in stop_punt]'''
+[stemmer.stem(w.lower()) for w in my_sent[4] if w not in stop_punt]
 
 #4 practise biagram find pair like new and york into new_york, or new delhi as new_delhi find number of biagram
 # phrases = Phrases(my_sent)#convert into sentenses
@@ -48,5 +57,4 @@ lower_bigram = Phraser(Phrases(my_sent, min_count=32, threshold=64))#or apply bi
 # print(bigram.phrasegrams)
 print(lower_bigram.phrasegrams)
 #output=(b'hath', b'shewed'): (17, 18.37949515563393), (b'mercy', b'endureth'): (41, 1161.0511603650586),
-# here 17=no of instance and 18 is their score of vector similar
-
+# here 17=no of instance and 18 is their score of vector similar'''
