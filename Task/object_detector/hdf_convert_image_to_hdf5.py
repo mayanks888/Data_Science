@@ -4,6 +4,7 @@ import h5py
 import numpy as np
 import datetime
 import time
+from PIL import Image
 ts = time.time()
 class Image_To_HDF5():
 
@@ -38,27 +39,31 @@ class Image_To_HDF5():
                     print("Input folder is empty")
                     return 1
                 test_ids = len(filenames)
-                test_images = test_group.create_dataset(name='input_images', shape=((test_ids),), dtype=uint8_dt)
-                # test_images = test_group.create_dataset(name='images', shape=(3, 2), dtype=uint8_dt)
+                # test_images = test_group.create_dataset(name='input_images', shape=((test_ids),), dtype=uint8_dt)
+                test_images = test_group.create_dataset('input_images', (3,), maxshape=((None),), dtype=uint8_dt)
                 for filename in filenames:
                     try:
+                        print('Processing : {fn} into hdf5 file'.format(fn=filename))
+                        test_id=Image.open( os.path.join(input_path, filename))
+                        test_id.close()
                         image_data = self.get_image_for_id(input_path, filename)
+
                         # if len(image_data.shape) is None:
                             # print("{it} datasets is not present in hdf5 file".format(it=image_type))
+                        test_images.resize((start+1,))
                         test_images[start] = image_data
                         start += 1
+
                         print(start)
-                    except IOError:
-                        print("Existing Image to HDF5 conversion...")
+                    # except IOError:
+                    #     print("Existing Image to HDF5 conversion...")
                     except:
                         print('Error in image conversion for file name {fn}, jumping to next file'.format(fn=filename))
-                    else:
-                        1
 
 
         print('Closing HDF5 file.')
         voc_h5file.close()
-        print('Converted sucessfully')
+        print('HDF5 created sucessfully')
 
 
     def get_image_for_id(self,path, image_id):
@@ -74,7 +79,7 @@ def parse_args():
     # parser.add_argument('--input_path', help="Input Folder")
     # parser.add_argument('--output_path', help="Output folder")
     parser.add_argument('--input_path', help="Input Folder",
-                        default='/home/mayank-s/PycharmProjects/Datasets/Berkely_DeepDrive/bdd100k/images/10k/val')
+                        default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect/input')
     parser.add_argument('--output_path', help="Output folder",
                         default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect')
     args = parser.parse_args()

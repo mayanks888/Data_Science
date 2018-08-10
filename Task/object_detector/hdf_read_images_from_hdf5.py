@@ -65,14 +65,14 @@ class Hdf5_to_Image():
                 img.save(image_path, 'JPEG')
 
                 # img.show()
-
-            print("closing hdf5 file")
+            print('Processing file..')
+            print("Closing hdf5 file")
         except IOError:
             print("Existing HDF5 to image conversion...")
         except:
             print('Error in image extraction, check content of hdf5 file')
         else:
-            print('Converted sucessfully')
+            print('HDF5 to image converted sucessfully')
 
 
 
@@ -81,9 +81,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Object detection on imgage started..')
     # parser.add_argument('--input_path', help="Input Folder")
     # parser.add_argument('--output_path', help="Output folder")
-    parser.add_argument('--hdf5_path', help="input hdf5_path",default='/home/mayank-s/Desktop/Link to Datasets/aptive/object_detect/INPUT_02_08_2018_19_57_51.hdf5')
+    parser.add_argument('--hdf5_path', help="input hdf5_path",default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect/INPUT_10_08_2018_11_58_13.hdf5')
     parser.add_argument('--image_type', help="input_output_images",
-                        default='input')
+                        default='output')
     parser.add_argument('--output_path', help="Output folder",
                         default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect/output')
     args = parser.parse_args()
