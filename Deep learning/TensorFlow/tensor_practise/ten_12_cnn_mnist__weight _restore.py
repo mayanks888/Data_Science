@@ -150,7 +150,7 @@ acc = tf.reduce_mean(tf.cast(train_matches, tf.float32))
 
 
 # intialiasing all variable
-
+#small change
 init=tf.global_variables_initializer()
 saver=tf.train.Saver()
 epochs=1
