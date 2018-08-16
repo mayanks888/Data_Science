@@ -3,7 +3,7 @@
 #
 # Run command : python3 object_detector.py "input_path" "output_path(optional)"
 # Note:
-#output path(optional): this is a optional parameter if not given then only creates output in hdf5 file
+# output path(optional): this is a optional parameter if not given then only creates output in hdf5 file
 # # run command: python3 aptiv_object_detector.py --input_path "/home/object_detector/input" --output_path "/home/object_detector/output"
 #
 # @author Mayank Sati/Ashis Samal
@@ -106,7 +106,6 @@ class Object_detect():
         test_group=h5file.get('test')
         test_images = test_group.require_dataset(name='output_images', shape=(len(image_return),), dtype=uint8_dt)
         time_start = time.time()
-        dirpath = tempfile.mkdtemp()
         temp_file = "tmp.jpg"
         print("Creating object detection on HDF5 file ", '\n')
         for val, image_val in enumerate(image_return):
@@ -137,13 +136,7 @@ class Object_detect():
 
                         cv2.imwrite("temp.jpg",image)
                         test_images[val] = self.get_image_for_id("temp.jpg")
-                        # Press any key to close the image
-                        # cv2.waitKey(1000)
-                        # Clean up
                         cv2.destroyAllWindows()
-                        # vis_util.save_image_array_as_png(image, output_folder)
-                    # except IOError:
-                    #     print("ERROR...object detection failed for filename: {vl}, Moving to next file...\n".format(vl=val))
                 except:
                     print('ERROR...object detection failed for filename: {fn}, Check file type... '.format(fn=val),'\n')
                 else:
@@ -166,8 +159,8 @@ class Object_detect():
 
     def get_image_for_id(self,fname):
         with open(fname, 'rb') as in_file:
-            data = in_file.read()
-        return np.fromstring(data, dtype='uint8')
+            im_data = in_file.read()
+        return np.fromstring(im_data, dtype='uint8')
 
 
 
@@ -190,11 +183,11 @@ PATH_TO_LABELS="labelmap.pbtxt"
 NUM_CLASSES=9
 
 args=parse_args()
-print('\n',"Starting  Objects Detection on Image...","\n")
+print("\n Starting  Objects Detection on HDF5...\n")
 print('Reading images from path :', args.input_path)
 model = Object_detect(MODEL_NAME,PATH_TO_LABELS,NUM_CLASSES)
 model.Laod_model_parameter()
-ret = model.find_detection(args.input_path,args.output_path)
-# ret = model.find_detection(args.input_path)
+# ret = model.find_detection(args.input_path,args.output_path)
+ret = model.find_detection(args.input_path)
 if ret==1:
     print("\n","File Error.....")

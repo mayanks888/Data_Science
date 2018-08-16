@@ -1,9 +1,9 @@
 ######################################################################################
 # A script to run object detection model
 #
-# Run command : python3 object_detector.py "input_path" "output_path"
-# example:
-#
+# Run command : python3 object_detector.py "input_path" "output_path(optional)"
+# Note:
+#output path(optional): this is a optional parameter if not given then only creates output in hdf5 file
 # # run command: python3 aptiv_object_detector.py --input_path "/home/object_detector/input" --output_path "/home/object_detector/output"
 #
 # @author Mayank Sati/Ashis Samal
@@ -87,7 +87,7 @@ class Object_detect():
             Args:
                 input_folder        : Input  file directory.
 
-                output_folder       : Output directory to save the image with object detected.
+                output_folder(optional).       : Output directory to save the image with object detected(optional).
 
             Returns:
                 None"""
@@ -111,53 +111,52 @@ class Object_detect():
         print("Creating object detection on HDF5 file ", '\n')
         for val, image_val in enumerate(image_return):
                 try:
-                    img = Image.open(io.BytesIO(image_val))
-                    file_name = "file_" + str(val) + '.jpg'
-                    img.save(temp_file)
-                    image = cv2.imread(temp_file, 1)
-                    image_expanded = np.expand_dims(image, axis=0)
-                    # Perform the actual detection by running the model with the image as input
-                    (boxes, scores, classes, num) = self.sess.run(
-                        [self.detection_boxes, self.detection_scores, self.detection_classes, self.num_detections],
-                        feed_dict={self.image_tensor: image_expanded})
-                    # Draw the results of the detection (aka 'visulaize the results')
-                    vis_util.visualize_boxes_and_labels_on_image_array(
-                        image,
-                        np.squeeze(boxes),
-                        np.squeeze(classes).astype(np.int32),
-                        np.squeeze(scores),
-                        self.category_index,
-                        use_normalized_coordinates=True,
-                        line_thickness=5,
-                        min_score_thresh=0.80)
-                    if output_folder is not None:
-                        output_path = (os.path.join(output_folder, file_name))
-                        cv2.imwrite(output_path, image)
+                        print('Processing image {vl}'.format(vl=val+1))
+                        img = Image.open(io.BytesIO(image_val))
+                        file_name = "file_" + str(val) + '.jpg'
+                        img.save(temp_file)
+                        image = cv2.imread(temp_file, 1)
+                        image_expanded = np.expand_dims(image, axis=0)
+                        # Perform the actual detection by running the model with the image as input
+                        (boxes, scores, classes, num) = self.sess.run(
+                            [self.detection_boxes, self.detection_scores, self.detection_classes, self.num_detections],
+                            feed_dict={self.image_tensor: image_expanded})
+                        # Draw the results of the detection (aka 'visulaize the results')
+                        vis_util.visualize_boxes_and_labels_on_image_array(
+                            image,
+                            np.squeeze(boxes),
+                            np.squeeze(classes).astype(np.int32),
+                            np.squeeze(scores),
+                            self.category_index,
+                            use_normalized_coordinates=True,
+                            line_thickness=5,
+                            min_score_thresh=0.80)
+                        if output_folder is not None:
+                            output_path = (os.path.join(output_folder, file_name))
+                            cv2.imwrite(output_path, image)
 
-                    cv2.imwrite("temp.jpg",image)
-                    test_images[val] = self.get_image_for_id("temp.jpg")
-                    # Press any key to close the image
-                    # cv2.waitKey(1000)
-                    # Clean up
-                    cv2.destroyAllWindows()
-                    # vis_util.save_image_array_as_png(image, output_folder)
-                except IOError:
-                    print("Existing Object Detection...")
+                        cv2.imwrite("temp.jpg",image)
+                        test_images[val] = self.get_image_for_id("temp.jpg")
+                        # Press any key to close the image
+                        # cv2.waitKey(1000)
+                        # Clean up
+                        cv2.destroyAllWindows()
+                        # vis_util.save_image_array_as_png(image, output_folder)
+                    # except IOError:
+                    #     print("ERROR...object detection failed for filename: {vl}, Moving to next file...\n".format(vl=val))
                 except:
-                    1
-                    # print('ERROR...object detection failed for filename: {fn}, Check file type... '.format(fn=filename),'\n')
+                    print('ERROR...object detection failed for filename: {fn}, Check file type... '.format(fn=val),'\n')
                 else:
-                    1
-                    #print("Object Detected  successfully !", '\n')
+                    print("Object Detected Successfully !", '\n')
 
         time_end = time.time()
-        print("Object Detection on above images completed successfully !", '\n')
+        print(" \n Object Detection on above images completed !\n Check output_images in HDG5 file : {fn}".format(fn=input_file))
         sec = timedelta(seconds=int(time_end - time_start))
         d = datetime(1, 1, 1) + sec
-        print("Time Consumed - hours:{th} - Minutes:{mn} - Second:{sc}".format(th=d.hour, mn=d.minute,
-                                                                                   sc=d.second))
-        print('\n',"Path for output annotated images :", output_folder)
-            # print("Object Detected successfully !", '\n')
+        print("Time Consumed - hours:{th} - Minutes:{mn} - Second:{sc}".format(th=d.hour, mn=d.minute, sc=d.second))
+        if output_folder is not None:
+            print('\n',"Path for output annotated images :", output_folder)
+
 
     def read_hdf5_file(self,hdf5_path):
         Read_h5 = h5py.File(hdf5_path, 'r')
@@ -178,7 +177,7 @@ def parse_args():
     # parser.add_argument('--input_path', help="Input Folder")
     # parser.add_argument('--output_path', help="Output folder")
     parser.add_argument('--input_path', help="Input Folder",
-                        default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect/INPUT_09_08_2018_12_38_03.hdf5')
+                        default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect/INPUT_10_08_2018_11_58_13.hdf5')
     parser.add_argument('--output_path', help="Output folder",
                         default='/home/mayank-s/PycharmProjects/Datasets/aptive/object_detect/output')
 
