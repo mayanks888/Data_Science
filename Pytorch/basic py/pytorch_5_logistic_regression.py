@@ -45,7 +45,7 @@ class Mymodel(torch.nn.Module):#mymodel is a sub class of model nn.module
         self.linear_function2 =torch.nn.Linear(3, 1)
 
     def forward(self,x):
-        hidden_layer1=F.relu(self.linear_function(x))
+        hidden_layer1=F.relu(self.linear_function1(x))
         ypred=self.F.relu(self.linear_function2())
         print('y predictin',ypred.data)
         return ypred
@@ -66,7 +66,7 @@ for loop in range(epochs):
     for (data, target) in ds.batch_iterator(batch_size=5, shuffle=True):
         new_data = data.reshape(-1,2,1)
         cool_data = new_data[0]
-        data= torch.tensor(new_data)
+        data= torch.tensor(new_data).float()
         target= torch.tensor(target)
         y_predicted = model(data)
         loss = criterea(y_predicted, target)

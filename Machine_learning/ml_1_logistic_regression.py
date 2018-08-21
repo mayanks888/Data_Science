@@ -44,11 +44,13 @@ print("the scaler mean  is",scale_x[0].mean(),scale_x[1].mean())
 
 from sklearn.linear_model import LogisticRegression
 log_reg=LogisticRegression(random_state=0)
-log_reg.fit(X_train,y_train)
+log_reg.fit(scale_x,y_train)
 
-y_pred=log_reg.predict(scale_c_test)
+y_pred=log_reg.predict(scale_c_test)  #predtion just take the index of argmax of maximum probaitly
 print(y_pred)
-
+new=     (log_reg.predict_proba(scale_c_test))
+print(new[:,0])
+print(log_reg.predict_proba(scale_c_test))#this jut show the probablity after logistic regression
 print("training_score ",log_reg.score(X_train,y_train))
 print("Testing score: " ,log_reg.score(X_test,y_test))
 
@@ -56,7 +58,7 @@ cm=confusion_matrix(y_test,y_pred)
 print(cm)
 #####################################################333
 # visualising my classification data
-from matplotlib.colors import ListedColormap
+'''from matplotlib.colors import ListedColormap
 # X_set, y_set = X_train, y_train
 X_set, y_set =X_test, y_test
 X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
@@ -72,5 +74,24 @@ plt.title('Logistic Regression (Training set)')
 plt.xlabel('Age')
 plt.ylabel('Estimated Salary')
 plt.legend()
-plt.show()
+plt.show()    '''
 
+# Visualising the Training set results
+from matplotlib.colors import ListedColormap
+X_set, y_set = X_train, y_train
+#creating array of all the possible value between min and max of all feature in all dimension for ploting
+X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
+                     np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
+plt.contourf(X1, X2, scale_val.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape),
+             alpha = 0.75, cmap = ListedColormap(('red', 'green')))
+plt.xlim(X1.min(), X1.max())
+plt.ylim(X2.min(), X2.max())#this is for limit
+# this is for ploting all value of feature and color them with red and green for visualisation
+for i, j in enumerate(np.unique(y_set)):
+    plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
+                c = ListedColormap(('red', 'green'))(i), label = j)
+plt.title('K-NN (Training set)')
+plt.xlabel('Age')
+plt.ylabel('Estimated Salary')
+plt.legend()
+plt.show()
