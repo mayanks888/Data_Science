@@ -117,7 +117,7 @@ cool3=(classifier.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape
 # Trying to print probabily into the grapg instead of just 1 and 0
 prob_val=(classifier.predict_proba(np.array([X1.ravel(), X2.ravel()]).T)[:,1].reshape(X1.shape))
 #prob_val=(classifier.predict_proba(np.array([X1.ravel(), X2.ravel()]).T))[:,0]
-plt.contourf(X1, X2,prob_val,
+plt.contourf(X1, prob_val,X2,
             alpha = 0.50, cmap = ListedColormap(('red', 'green')))
 # plt.contourf(X1, X2, classifier.predict_proba(np.array([X1.ravel(), X2.ravel()]).T)[0].reshape(X1.shape),
 #              alpha = 0.75, cmap = ListedColormap(('red', 'green')))
