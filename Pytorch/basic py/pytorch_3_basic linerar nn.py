@@ -19,6 +19,7 @@ class DynamicNet(torch.nn.Module):
     self.middle_linear = torch.nn.Linear(H, H)
     self.output_linear = torch.nn.Linear(H, D_out)
 
+
   def forward(self, x):
     """
     For the forward pass of the model, we randomly choose either 0, 1, 2, or 3

@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 
-dataset = pd.read_csv('Startups.csv')
+dataset = pd.read_csv('/home/mayank-s/Desktop/Link to Datasets/50_Startups.csv')
 X = dataset.iloc[:, :-1].values
 y = dataset.iloc[:, 4].values
 print (dataset['State'].unique)
