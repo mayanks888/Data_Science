@@ -22,8 +22,8 @@ class RPN(nn.Module):
     def __init__(self):
         super(RPN, self).__init__()
 
-        self.generate_model=create_model.Gen_model()
-        self.rpn_net=region_propsal_Network.rpn(512,512)
+        self.generate_model= create_model.Gen_model()
+        self.rpn_net= region_propsal_Network.rpn( 512 , 512 )
         # self.image_data=read_pascal_voc.prepareBatch()#0,3,imageNameFile,vocPath)
 
     def forward(self,data_image):
@@ -46,7 +46,7 @@ model = RPN()
 # optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
 
 
-data_image=read_pascal_voc.prepareBatch(0,1,imageNameFile,vocPath)
+data_image= read_pascal_voc.prepareBatch( 0 , 1 , imageNameFile , vocPath )
 image=np.array(data_image[0])
 image=np.swapaxes(image, 1, 3)
 image_tensor=torch.from_numpy(image)

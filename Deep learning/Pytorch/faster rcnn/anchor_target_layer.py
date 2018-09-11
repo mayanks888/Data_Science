@@ -39,7 +39,7 @@ def anchor_target_layer_python(rpn_cls_score, gt_boxes, im_dims, feat_strides, a
 	allowed_border             = 0
 	im_dims                    = im_dims[0]
 	anchor_scales 			   = np.array( anchor_scales)
-	anchors       			   = generate_anchors.generate_anchors( base_size = 16, ratios=[0.5, 1, 2], scales = anchor_scales )
+	anchors       			   = generate_anchors.generate_anchors( base_size = 16 , ratios=[ 0.5, 1, 2 ] , scales = anchor_scales )
 	num_anchors                = anchors.shape[0]
 
 	# find the shape ( ..., H, W)
@@ -215,7 +215,7 @@ def compute_target(ex_rois, gt_rois):
 	assert ex_rois.shape[1] == 4
 	assert gt_rois.shape[1] == 5
 
-	return bbox_transform.bbox_transform(ex_rois, gt_rois[:,:4].astype(np.float32, copy = False) )
+	return bbox_transform.bbox_transform( ex_rois , gt_rois[ :, :4 ].astype( np.float32 , copy = False ) )
 
 
 
